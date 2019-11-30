@@ -7,5 +7,6 @@ type Company struct {
 	PhoneNo   string
 	Address   string
 	Rating    int
+	Password  string
 	//This are infos that will be used in the system, another infos like password will be saved in db
 }
