@@ -7,6 +7,7 @@ type Company struct {
 	PhoneNo   string
 	Address   string
 	Rating    int
+	ImagePath string //the logo picture path of the company
 	Password  string
 	//This are infos that will be used in the system, another infos like password will be saved in db
 }

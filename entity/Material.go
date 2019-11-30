@@ -9,4 +9,5 @@ type Material struct {
 	Discount    float32 //in percent
 	State       byte    //is the material new or used
 	OnSale      bool    // is the material open for sale
+	ImagePath   string  // material image path
 }

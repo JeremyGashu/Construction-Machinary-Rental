@@ -9,6 +9,7 @@ type User struct {
 	DeliveryAddress string
 	PostNum         string
 	Password        string
+	ImagePath       string //User profle picture image path
 	// Rating          byte // The rating will be made by the loaner company
 	//This are infos that will be used in the system, another infos like password will be saved in db
 }
