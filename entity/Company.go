@@ -1,7 +1,8 @@
 package entity
 
+//Company -
 type Company struct {
-	CompanyID string
+	CompanyID int
 	Name      string
 	Email     string
 	PhoneNo   string

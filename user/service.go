@@ -2,7 +2,8 @@ package user
 
 import "github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 
-type UserService interface {
+//Service -
+type Service interface {
 	User(id string) (entity.User, error)
 	UpdateUser(entity.User) error
 	DeleteUser(entity.User) error

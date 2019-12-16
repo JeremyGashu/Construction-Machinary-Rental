@@ -2,7 +2,8 @@ package user
 
 import "github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 
-type UserRepository interface {
+//Repository -
+type Repository interface {
 	User(id string) (entity.User, error)
 	UpdateUser(entity.User) error
 	DeleteUser(id int) error
