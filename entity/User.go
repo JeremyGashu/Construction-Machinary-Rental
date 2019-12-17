@@ -1,9 +1,9 @@
 package entity
 
 type User struct {
+	Username        string
 	FirstName       string
 	LastName        string
-	Username        string
 	Email           string
 	Phone           string
 	DeliveryAddress string //Address
