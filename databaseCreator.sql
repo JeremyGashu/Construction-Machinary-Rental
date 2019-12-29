@@ -34,3 +34,5 @@ create table materials(
     onsale boolean default false,
     imagepath text default 'defaultmaterial.jpg'
 );
+
+

@@ -27,7 +27,7 @@ func (mr *MaterialRepository) Materials() ([]entity.Material, error) {
 	}
 	for data.Next() {
 		var material entity.Material
-		data.Scan(&material.ID, &material.Name, &material.Type, &material.Owner, &material.PricePerDay, &material.OnDiscount, &material.Discount, &material.State, &material.OnSale, &material.ImagePath) //all the datas that will be added in the category
+		data.Scan(&material.ID, &material.Name, &material.Type, &material.Owner, &material.PricePerDay, &material.OnDiscount, &material.Discount, &material.OnSale, &material.ImagePath) //all the datas that will be added in the category
 		materials = append(materials, material)
 	}
 	if err := data.Err(); err != nil {
@@ -40,7 +40,7 @@ func (mr *MaterialRepository) Materials() ([]entity.Material, error) {
 func (mr *MaterialRepository) Material(id int) (entity.Material, error) {
 	material := entity.Material{}
 	query := "select * from materials where id=$1"
-	err := mr.conn.QueryRow(query, id).Scan(&material.ID, &material.Name, &material.Type, &material.Owner, &material.PricePerDay, &material.OnDiscount, &material.Discount, &material.State, &material.OnSale, &material.ImagePath)
+	err := mr.conn.QueryRow(query, id).Scan(&material.ID, &material.Name, &material.Type, &material.Owner, &material.PricePerDay, &material.ImagePath)
 	if err != nil {
 		return material, err
 	}
@@ -49,8 +49,8 @@ func (mr *MaterialRepository) Material(id int) (entity.Material, error) {
 
 //UpdateMaterial -
 func (mr *MaterialRepository) UpdateMaterial(material entity.Material) error {
-	query := "update materials set name=$1,type=$2,owner=$3,priceperday=$4,ondiscount=$5,discount=$6,state=$7,onsale=$8,imagepath=$9 where id=$10"
-	_, err := mr.conn.Exec(query, material.Name, material.Type, material.Owner, material.PricePerDay, material.OnDiscount, material.Discount, material.State, material.OnSale, material.ImagePath, material.ID)
+	query := "update materials set name=$1,type=$2,owner=$3,priceperday=$4,ondiscount=$5,discount=$6,onsale=$7,imagepath=$8 where id=$9"
+	_, err := mr.conn.Exec(query, material.Name, material.Type, material.Owner, material.PricePerDay, material.OnDiscount, material.Discount, material.OnSale, material.ImagePath, material.ID)
 	if err != nil {
 		return err
 	}
@@ -69,9 +69,9 @@ func (mr *MaterialRepository) DeleteMaterial(id int) error {
 
 //AddMaterial -
 func (mr *MaterialRepository) AddMaterial(material entity.Material) error {
-	query := "insert into materials(name, type, owner,priceperday, ondiscount, discount, state, onsale, imagepath) values($1,$2,$3,$4,$5,$6,$7,$8,$9)"
+	query := "insert into materials(name, type, owner,priceperday, ondiscount, discount, onsale, imagepath) values($1,$2,$3,$4,$5,$6,$7,$8)"
 
-	_, err := mr.conn.Exec(query, material.Name, material.Type, material.Owner, material.PricePerDay, material.OnDiscount, material.Discount, material.State, material.OnSale, material.ImagePath)
+	_, err := mr.conn.Exec(query, material.Name, material.Type, material.Owner, material.PricePerDay, material.OnDiscount, material.Discount, material.OnSale, material.ImagePath)
 	if err != nil {
 		return err
 	}
@@ -88,7 +88,7 @@ func (mr *MaterialRepository) MaterialByCompanyOwner(id int) ([]entity.Material,
 	}
 	for data.Next() {
 		var material entity.Material
-		data.Scan(&material.ID, &material.Name, &material.Type, &material.Owner, &material.PricePerDay, &material.OnDiscount, &material.Discount, &material.State, &material.OnSale, &material.ImagePath) //all the datas that will be added in the category
+		data.Scan(&material.ID, &material.Name, &material.Type, &material.Owner, &material.PricePerDay, &material.OnDiscount, &material.Discount, &material.OnSale, &material.ImagePath) //all the datas that will be added in the category
 		materials = append(materials, material)
 	}
 	if err := data.Err(); err != nil {

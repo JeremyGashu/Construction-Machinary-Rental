@@ -7,7 +7,6 @@ type User struct {
 	Email           string
 	Phone           string
 	DeliveryAddress string //Address
-	PostNum         string //Optional
 	Password        string
 	ImagePath       string //
 	Account         int    //By default we will give them 200000 as starting point, so dont include it in the field
