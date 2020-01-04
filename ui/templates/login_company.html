@@ -1,0 +1,151 @@
+{{define "loginAsCompany.layout"}}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- created by OSTON CODE CYPHER -->
+    <!--Support/subscribe my channel @ youtube.com/ostoncodecypher -->
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/materialize.min.css">
+    <style>
+        body {
+            background-color: rgb(47, 49, 49);
+            background-image: url("/assets/img/blnnack.png");
+            background-size: cover;
+        }
+
+        .progress {
+            width: 50%;
+            margin: 0 auto;
+            margin-top: 20%;
+        }
+
+        @media only screen and (max-width:924px) {
+            .progress {
+                width: 70%;
+                margin: 0 auto;
+                margin-top: 60%;
+            }
+        }
+    </style>
+</head>
+
+<body class="blue-grey darken-4">
+
+    <div id="flayer">
+        <div id="slayer">
+
+            <div class="container" id="content">
+
+                <body id="Home" class="scrollspy">
+                    <!--nav bar-->
+                    <div class="navbar">
+                        <nav class="grey darken-4">
+                            <div class="container">
+                                <div class="nav-wrapper">
+                                    <a href="#" class="brand-logo">Ethio-Tools</a>
+                                    <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i
+                                            class="material-icons">menu</i></a>
+                                    <ul class="right hide-on-med-and-down">
+                                        <li><a href="index.html"> Home</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                    <ul class="sidenav yellow lighten-4" id="mobile-nav">
+                        <li><a href="index.html">Home</a></li>
+                    </ul>
+                    <div class="container col s8 white-text ">
+
+                        <h4>Application Form For Companys </h4>
+                        <form class="col s14 white-text">
+                            <div class="row">
+                                <div class="input-field hoverable col s6">
+                                    <i class="material-icons prefix">store</i>
+                                    <input id="first_name" type="text" class="validate">
+                                    <label for="first_name">Company Name</label>
+                                </div>
+                                <div class="input-field hoverable col s6">
+                                    <i class="material-icons prefix">location_on</i>
+                                    <input id="last_name" type="text" class="validate ">
+                                    <label for="last_name">Address</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field hoverable col s12">
+                                    <i class="material-icons prefix">description</i>
+                                    <input id="username" type="text" class="validate">
+                                    <label for="username">Description</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field hoverable col s6">
+                                    <i class="material-icons prefix">phone</i>
+                                    <input id="username" type="text" class="validate">
+                                    <label for="username">Phone</label>
+                                </div>
+                                <div class="input-field hoverable col s6">
+                                    <i class="material-icons prefix">email</i>
+                                    <input id="email" type="email" class="validate">
+                                    <label for="email">Email</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field hoverable col s6">
+                                    <i class="material-icons prefix">vpn_key</i>
+                                    <input id="password" type="password" class="validate">
+                                    <label for="password">Password</label>
+                                </div>
+                                <div class="input-field hoverable col s6">
+                                    <i class="material-icons prefix">replay</i>
+                                    <input id="password2" type="password" class="validate">
+                                    <label for="password2">Re-Password</label>
+                                </div>
+                            </div>
+                            <a class="waves-effect waves-light btn right hoverable grey darken-4"><i
+                                    class="large material-icons right">done</i>Apply</a>
+                        </form>
+
+                    </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/assets/js/materialize.min.js"></script>
+    <script>
+        //sidenav
+        const sidenav = document.querySelector('.sidenav');
+        M.Sidenav.init(sidenav, {});
+        //slider
+        const slider = document.querySelector('.slider');
+        M.Slider.init(slider, {
+            indicators: false,
+            height: 400,
+            transition: 500,
+            interval: 6000,
+
+        });
+        const login = document.querySelectorAll(".modal");
+        M.Modal.init(login, {
+            opacity: 0.5,
+            dismissible: false
+        });
+
+        document.querySelector("#content").style.display = "none";
+        document.querySelector("#flayer").classList.add("progress");
+        document.querySelector("#slayer").classList.add("indeterminate");
+
+        setTimeout(function () {
+            document.querySelector("#flayer").classList.remove("progress");
+            document.querySelector("#slayer").classList.remove("indeterminate");
+            document.querySelector("#content").style.display = "block";
+        }, 500)
+    </script>
+</body>
+
+</html>
+{{end}}

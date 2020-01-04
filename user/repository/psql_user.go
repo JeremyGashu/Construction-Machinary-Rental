@@ -72,8 +72,8 @@ func (pr *PsqlUserRepository) DeleteUser(username string) error {
 //AddUser -
 func (pr *PsqlUserRepository) AddUser(user entity.User) error {
 	//We add on it after we figure all the co;umns out...
-	query := "insert into users(username,firstname, lastname,email,phone,address,imagepath) values($1,$2,$3,$4,$5,$5,$7)"
-	_, err := pr.conn.Exec(query, user.Username, user.FirstName, user.LastName, user.Email, user.Phone, user.DeliveryAddress, user.ImagePath)
+	query := "insert into users(username,firstname, lastname,email,phone,address, password) values($1,$2,$3,$4,$5,$6,$7)"
+	_, err := pr.conn.Exec(query, user.Username, user.FirstName, user.LastName, user.Email, user.Phone, user.DeliveryAddress, user.Password)
 	if err != nil {
 		return err
 	}

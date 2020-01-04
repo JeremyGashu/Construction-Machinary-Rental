@@ -1,0 +1,216 @@
+{{define "signup.layout"}}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- created by OSTON CODE CYPHER -->
+    <!--Support/subscribe my channel @ youtube.com/ostoncodecypher -->
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/materialize.min.css">
+    <style>
+        body {
+            background-color: teal;
+            background-image: url("/assets/img/back.jpg");
+        }
+
+        .progress {
+            width: 50%;
+            margin: 0 auto;
+            margin-top: 20%;
+        }
+
+        @media only screen and (max-width:924px) {
+            .progress {
+                width: 70%;
+                margin: 0 auto;
+                margin-top: 60%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="flayer">
+        <div id="slayer">
+
+            <div class="container" id="content">
+
+                <body id="Home" class="scrollspy">
+                    <!--nav bar-->
+                    <div class="navbar">
+                        <nav class="grey darken-4">
+                            <div class="container">
+                                <div class="nav-wrapper">
+                                    <a href="/" class="brand-logo">Ethio-Tools</a>
+                                    <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i
+                                            class="material-icons">menu</i></a>
+                                    <ul class="right hide-on-med-and-down">
+                                        <li><a href="Galary">Gallery</a></li>
+                                        <li><a href="Contact">Contact Us</a></li>
+                                        <li><a href="login" class="">Sign in</a></li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                    <ul class="sidenav yellow lighten-4" id="mobile-nav">
+                        <li><a href="Galary">Gallery</a></li>
+                        <li><a href="Contact">Contact Us</a></li>
+                        <li><a href="login">Sign in</a></li>
+                    </ul>
+                    <div class="row">
+                        <div class="col l3 m3 s12"></div>
+                        <div class="col l6 m6 s12">
+                            <form action="/users/signup" method="POST">
+
+                                <div class="card-panel z-depth-5">
+                                    <p class="right">Already have an account? <a href="#login"
+                                            class="modal-trigger">login</a></p>
+
+                                    <h5 class="center">Create Account</h5>
+
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">toc</i>
+                                        <input type="text" name="fname">
+                                        <label>Firstname</label>
+                                    </div>
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">toc</i>
+                                        <input type="text" name="lname">
+                                        <label>lastname</label>
+                                    </div>
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">account_circle</i>
+                                        <input type="text" name="username">
+                                        <label>Username</label>
+                                    </div>
+
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">email</i>
+                                        <input type="email" name="email" class="validate">
+                                        <label>Email</label>
+                                    </div>
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">phone</i>
+                                        <input type="tel" name="phone" class="validate">
+                                        <label>Phone</label>
+                                    </div>
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">location_on</i>
+                                        <input type="text" name="address" class="validate">
+                                        <label>Delivery Address</label>
+                                    </div>
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">vpn_key</i>
+                                        <input type="password" name="pass1">
+                                        <label>Password</label>
+                                    </div>
+
+
+                                    <div class="input-field">
+                                        <i class="material-icons prefix">vpn_key</i>
+                                        <input type="password" name="pass2">
+                                        <label>Confirm password</label>
+                                    </div>
+                                    <input type="submit" name="submit" value="register"
+                                        class="btn left col s12 grey darken-4">
+
+                                    <div class="clearfix"></div>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="col l3 m3 s12"></div>
+
+
+
+                    </div>
+            </div>
+        </div>
+    </div>
+    <!-- login form put in the form -->
+    <div class="modal modal-fixed-footer" id="login">
+        <form action="/users/login" method="POST">
+            <div class="modal-conent">
+                <div class="container">
+                    <h2 class="center"><i class="material-icons center large red-text">person</i>Login</h2>
+
+                    <div class="row">
+
+                        <div class="col m12 s12">
+                            <div class="input-field">
+                                <i class="material-icons prefix">person</i>
+                                <input type="text" name="username">
+                                <label>Username</label>
+                            </div>
+                            <div class="input-field">
+                                <i class="material-icons prefix">lock</i>
+                                <input type="password" name="pass1">
+                                <label>Password</label>
+                            </div>
+                            <p>
+                                <label>
+                                    <input type="checkbox">
+                                    <span>Remember me</span>
+                                </label>
+                            </p>
+                        </div>
+                        <div class="right">
+                            <input type="submit" name="submit" value="login" class="btn pulse grey darken-4">
+                            <input type="button" value="close" class="btn modal-close red darken-2">
+
+                        </div>
+
+                        <div>
+                            <p class="left">Are you New? <a href="/users/signup">Register</a></p>
+
+                        </div>
+
+
+                    </div>
+                </div><!-- end of modal container -->
+            </div>
+
+    </div>
+    </form>
+    </div>
+
+
+    <script src="/assets/js/materialize.min.js"></script>
+    <script>
+        //sidenav
+        const sidenav = document.querySelector('.sidenav');
+        M.Sidenav.init(sidenav, {});
+        //slider
+        const slider = document.querySelector('.slider');
+        M.Slider.init(slider, {
+            indicators: false,
+            height: 400,
+            transition: 500,
+            interval: 6000,
+
+        });
+        const login = document.querySelectorAll(".modal");
+        M.Modal.init(login, {
+            opacity: 0.5,
+            dismissible: false
+        });
+
+        document.querySelector("#content").style.display = "none";
+        document.querySelector("#flayer").classList.add("progress");
+        document.querySelector("#slayer").classList.add("indeterminate");
+
+        setTimeout(function () {
+            document.querySelector("#flayer").classList.remove("progress");
+            document.querySelector("#slayer").classList.remove("indeterminate");
+            document.querySelector("#content").style.display = "block";
+        }, 500)
+    </script>
+</body>
+
+</html>
+{{end}}

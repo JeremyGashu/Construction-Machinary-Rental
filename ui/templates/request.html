@@ -1,0 +1,42 @@
+{{define "request.layout"}}
+{{template "adminnav"}}
+{{template "request.content"}}
+{{template "footer"}}
+{{end}}
+{{define "request.content"}}
+<main role="main" class="right-align">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2>Menu Categories</h2>
+    </div>
+    <div class="row">
+        <a class="btn btn-large" href="/admin" role="button">New Category</a>
+    </div>
+    <table class="table striped grey row">
+        <thead>
+            <tr>
+                <th scope="col ">Company ID</th>
+                <th scope="col ">Company Name</th>
+                <th scope="col ">Description</th>
+                <th scope="col ">Email</th>
+                <th scope="col ">Phone</th>
+                <th scope="col "></th>
+                <th scope="col "></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range . }}
+            <tr>
+                <th scope="row"> {{ .ID }} </th>
+                <td> {{ .Name }} </td>
+                <td> {{ .Description }} </td>
+                <td> {{ .Email }} </td>
+                <td> <img src="/assets/img/{{ .Image }}" width="70rem" height="70rem" /> </td>
+                <td> <a href="/admin/categories/update?id={{ .ID }}">Accepted</a> </td>
+                <td> <a href="/admin/categories/delete?id={{ .ID }}">Denied</a> </td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</main>
+{{end}}
