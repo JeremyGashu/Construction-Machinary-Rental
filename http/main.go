@@ -6,7 +6,9 @@ import (
 	"html/template"
 	"net/http"
 
-	handler "github.com/ermiasgashu/Construction-Machinary-Rental/http/handlers"
+	compRepo "github.com/ermiasgashu/Construction-Machinary-Rental/company/repository"
+	compService "github.com/ermiasgashu/Construction-Machinary-Rental/company/service"
+	handler "github.com/ermiasgashu/Construction-Machinary-Rental/http/handler"
 	usrRepo "github.com/ermiasgashu/Construction-Machinary-Rental/user/repository"
 	usrService "github.com/ermiasgashu/Construction-Machinary-Rental/user/service"
 	_ "github.com/lib/pq"
@@ -29,16 +31,22 @@ func index(w http.ResponseWriter, r *http.Request) {
 // func login(w http.ResponseWriter, r *http.Request) {
 // 	templ.ExecuteTemplate(w, "signup.layout", nil)
 // }
-// func admin(w http.ResponseWriter, r *http.Request) {
-// 	templ.ExecuteTemplate(w, "admin.layout", nil)
-// }
-// func userr(w http.ResponseWriter, r *http.Request) {
-// 	templ.ExecuteTemplate(w, "user.layout", nil)
-// }
+func admin(w http.ResponseWriter, r *http.Request) {
+	templ.ExecuteTemplate(w, "admin.layout", nil)
+}
 
-// func loginAs(w http.ResponseWriter, r *http.Request) {
-// 	templ.ExecuteTemplate(w, "loginAsCompany.layout", nil)
-// }
+func users(w http.ResponseWriter, r *http.Request) {
+	templ.ExecuteTemplate(w, "user.layout", nil)
+}
+
+func loginAs(w http.ResponseWriter, r *http.Request) {
+	templ.ExecuteTemplate(w, "loginAsCompany.layout", nil)
+}
+
+func companies(w http.ResponseWriter, r *http.Request) {
+	templ.ExecuteTemplate(w, "company.layout", nil)
+
+}
 
 // func company(w http.ResponseWriter, r *http.Request) {
 // 	templ.ExecuteTemplate(w, "company.layout", nil)
@@ -66,15 +74,23 @@ func main() {
 	userService := usrService.NewUserServiceImpl(userRepo)
 	userHandler := handler.NewUserHandler(userService, templ)
 
+	companyRepo := compRepo.NewCompanyRepo(dbconn)
+	compService := compService.NewCompanyService(companyRepo)
+	companyHandler := handler.NewCompanyHandler(compService, templ)
+
 	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir("../ui/assets"))
 	mux.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
 	mux.HandleFunc("/", index)
+
+	mux.HandleFunc("/users", userHandler.UserSignup) //TODO needs authentication to access this route
 	mux.HandleFunc("/users/signup", userHandler.AddUser)
 
-	// mux.HandleFunc("/admin", admin)
-	// mux.HandleFunc("/user", userr)
-	// http.HandleFunc("/users/signup", index)
+	mux.HandleFunc("/admin", admin)
+
+	mux.HandleFunc("/companies/signup", companyHandler.CompanySigup)
+	mux.HandleFunc("/companies", companyHandler.CompanyIndex) //TODO needs authentication to access this route
+
 	http.ListenAndServe(":8080", mux)
 }

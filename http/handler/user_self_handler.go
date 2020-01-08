@@ -55,3 +55,8 @@ func (uh *UserHandler) AddUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+//UserSignup -
+func (uh *UserHandler) UserSignup(w http.ResponseWriter, r *http.Request) {
+	uh.tmpl.ExecuteTemplate(w, "user.layout", nil)
+}

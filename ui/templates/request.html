@@ -32,8 +32,8 @@
                 <td> {{ .Description }} </td>
                 <td> {{ .Email }} </td>
                 <td> <img src="/assets/img/{{ .Image }}" width="70rem" height="70rem" /> </td>
-                <td> <a href="/admin/categories/update?id={{ .ID }}">Accepted</a> </td>
-                <td> <a href="/admin/categories/delete?id={{ .ID }}">Denied</a> </td>
+                <td> <a href="/admin/categories/update?id={{ .ID }}">Accept</a> </td>
+                <td> <a href="/admin/categories/delete?id={{ .ID }}">Deny</a> </td>
             </tr>
             {{ end }}
         </tbody>
