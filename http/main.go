@@ -33,7 +33,6 @@ var store *sessions.CookieStore = sessionprovider.Store
 
 func index(w http.ResponseWriter, r *http.Request) {
 	templ.ExecuteTemplate(w, "index.layout", nil)
-
 }
 
 func main() {
@@ -46,7 +45,7 @@ func main() {
 
 	if err != nil {
 		panic(err)
-	}
+	} //this i
 	defer dbconn.Close()
 
 	if err := dbconn.Ping(); err != nil {
@@ -70,6 +69,7 @@ func main() {
 	mux.HandleFunc("/users", middleware.UserLoginRequired(userHandler.UserSignup)) //TODO needs authentication to access this route
 	mux.HandleFunc("/users/login", userHandler.UserLogin)
 	mux.HandleFunc("/users/signup", userHandler.AddUser)
+	mux.HandleFunc("/users/logout", userHandler.LogOut)
 
 	// mux.HandleFunc("/admin", admin) //TODO admin handlers
 

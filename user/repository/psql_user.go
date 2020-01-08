@@ -21,8 +21,8 @@ func NewPsqlUserRepository(Conn *sql.DB) *PsqlUserRepository {
 func (pr *PsqlUserRepository) User(username string) (entity.User, error) {
 	//returning a specifiv user or and error report
 	user := entity.User{}
-	query := "select firstname, lastname,email,phone,address from users where username = $1"
-	err := pr.conn.QueryRow(query, username).Scan(&user.FirstName, &user.LastName, &user.Email, &user.Phone, &user.DeliveryAddress) //all the user info
+	query := "select username, firstname, lastname,email,phone,address,password,imagepath,account from users where username = $1"
+	err := pr.conn.QueryRow(query, username).Scan(&user.Username, &user.FirstName, &user.LastName, &user.Email, &user.Phone, &user.DeliveryAddress, &user.Password, &user.ImagePath, &user.Account) //all the user info
 	if err != nil {
 		return user, errors.New("No user found with this id")
 	}

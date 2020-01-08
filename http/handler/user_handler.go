@@ -70,12 +70,40 @@ func (uh *UserHandler) UserLogin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	session.Values["user_username"] = "gearmias" //TODO do real authentication in the name and in the field
-	err = session.Save(r, w)
-	if err != nil {
-		fmt.Println(err)
+	if r.Method == http.MethodPost {
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+		usr, err := uh.userService.User(username)
+		// fmt.Println("What the user entered: ", password)
+		// fmt.Println("What it actually is: ", usr.Password)
+		// fmt.Println("What the user entered: ", username)
+		// fmt.Println("What it actually is: ", usr.Username)
+		// fmt.Println(usr.Username == username)
+		if err != nil {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+		} //here we checked if the username exists
+		if usr.Password == password {
+			session.Values["user_username"] = username
+			session.Save(r, w)
+			uh.tmpl.ExecuteTemplate(w, "user.layout", nil)
+
+		} else {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+		}
+		//TODO do real authentication in the name and in the field
+
+	} else {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
-	fmt.Println(session.Values["user_username"])
-	fmt.Println("this is jumped...")
-	// w.Write([]byte(session.Values["user_username"]))
+}
+
+//LogOut -
+func (uh *UserHandler) LogOut(w http.ResponseWriter, r *http.Request) {
+	session, err := uh.store.Get(r, "authentication")
+	if err != nil {
+		panic(err)
+	}
+	session.Options.MaxAge = -1
+	session.Save(r, w)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
