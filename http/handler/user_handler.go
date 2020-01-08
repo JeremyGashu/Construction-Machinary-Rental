@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/gorilla/sessions"
+
 	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/user"
 )
@@ -13,11 +15,12 @@ import (
 type UserHandler struct {
 	userService user.Service
 	tmpl        *template.Template
+	store       *sessions.CookieStore
 }
 
 //NewUserHandler -
-func NewUserHandler(us user.Service, tmplate *template.Template) *UserHandler {
-	return &UserHandler{userService: us, tmpl: tmplate}
+func NewUserHandler(us user.Service, tmplate *template.Template, str *sessions.CookieStore) *UserHandler {
+	return &UserHandler{userService: us, tmpl: tmplate, store: str}
 }
 
 //AddUser - User Sign up function
@@ -31,7 +34,7 @@ func (uh *UserHandler) AddUser(w http.ResponseWriter, r *http.Request) {
 		phone := r.FormValue("phone")
 		address := r.FormValue("address")
 		password1 := r.FormValue("pass1")
-		// password2 := r.FormValue("password2")
+		// password2 := r.FormValue("password2") //TODO the real auth is to be made
 		//TODO check password1 and password2 similarity
 		newUser.Username = username
 		newUser.FirstName = firstname
@@ -59,4 +62,20 @@ func (uh *UserHandler) AddUser(w http.ResponseWriter, r *http.Request) {
 //UserSignup -
 func (uh *UserHandler) UserSignup(w http.ResponseWriter, r *http.Request) {
 	uh.tmpl.ExecuteTemplate(w, "user.layout", nil)
+}
+
+//UserLogin -
+func (uh *UserHandler) UserLogin(w http.ResponseWriter, r *http.Request) {
+	session, err := uh.store.Get(r, "authentication")
+	if err != nil {
+		fmt.Println(err)
+	}
+	session.Values["user_username"] = "gearmias" //TODO do real authentication in the name and in the field
+	err = session.Save(r, w)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(session.Values["user_username"])
+	fmt.Println("this is jumped...")
+	// w.Write([]byte(session.Values["user_username"]))
 }

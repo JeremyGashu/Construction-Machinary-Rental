@@ -6,6 +6,12 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/ermiasgashu/Construction-Machinary-Rental/sessionprovider"
+
+	"github.com/ermiasgashu/Construction-Machinary-Rental/middleware"
+
+	"github.com/gorilla/sessions"
+
 	compRepo "github.com/ermiasgashu/Construction-Machinary-Rental/company/repository"
 	compService "github.com/ermiasgashu/Construction-Machinary-Rental/company/service"
 	handler "github.com/ermiasgashu/Construction-Machinary-Rental/http/handler"
@@ -23,37 +29,14 @@ const (
 )
 
 var templ = template.Must(template.ParseGlob("../ui/templates/*"))
+var store *sessions.CookieStore = sessionprovider.Store
 
 func index(w http.ResponseWriter, r *http.Request) {
 	templ.ExecuteTemplate(w, "index.layout", nil)
-}
-
-// func login(w http.ResponseWriter, r *http.Request) {
-// 	templ.ExecuteTemplate(w, "signup.layout", nil)
-// }
-func admin(w http.ResponseWriter, r *http.Request) {
-	templ.ExecuteTemplate(w, "admin.layout", nil)
-}
-
-func users(w http.ResponseWriter, r *http.Request) {
-	templ.ExecuteTemplate(w, "user.layout", nil)
-}
-
-func loginAs(w http.ResponseWriter, r *http.Request) {
-	templ.ExecuteTemplate(w, "loginAsCompany.layout", nil)
-}
-
-func companies(w http.ResponseWriter, r *http.Request) {
-	templ.ExecuteTemplate(w, "company.layout", nil)
 
 }
 
-// func company(w http.ResponseWriter, r *http.Request) {
-// 	templ.ExecuteTemplate(w, "company.layout", nil)
-// }
 func main() {
-
-	// session, err := store.Get(r, "session-name")
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
@@ -72,11 +55,11 @@ func main() {
 
 	userRepo := usrRepo.NewPsqlUserRepository(dbconn)
 	userService := usrService.NewUserServiceImpl(userRepo)
-	userHandler := handler.NewUserHandler(userService, templ)
+	userHandler := handler.NewUserHandler(userService, templ, store)
 
 	companyRepo := compRepo.NewCompanyRepo(dbconn)
 	compService := compService.NewCompanyService(companyRepo)
-	companyHandler := handler.NewCompanyHandler(compService, templ)
+	companyHandler := handler.NewCompanyHandler(compService, templ, store)
 
 	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir("../ui/assets"))
@@ -84,10 +67,11 @@ func main() {
 
 	mux.HandleFunc("/", index)
 
-	mux.HandleFunc("/users", userHandler.UserSignup) //TODO needs authentication to access this route
+	mux.HandleFunc("/users", middleware.UserLoginRequired(userHandler.UserSignup)) //TODO needs authentication to access this route
+	mux.HandleFunc("/users/login", userHandler.UserLogin)
 	mux.HandleFunc("/users/signup", userHandler.AddUser)
 
-	mux.HandleFunc("/admin", admin)
+	// mux.HandleFunc("/admin", admin) //TODO admin handlers
 
 	mux.HandleFunc("/companies/signup", companyHandler.CompanySigup)
 	mux.HandleFunc("/companies", companyHandler.CompanyIndex) //TODO needs authentication to access this route

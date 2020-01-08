@@ -4,6 +4,8 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/gorilla/sessions"
+
 	"github.com/ermiasgashu/Construction-Machinary-Rental/company"
 )
 
@@ -11,10 +13,11 @@ import (
 type CompanyHandler struct {
 	compService company.Service
 	tmpl        *template.Template
+	store       *sessions.CookieStore
 }
 
 //NewCompanyHandler -
-func NewCompanyHandler(serv company.Service, tem *template.Template) *CompanyHandler {
+func NewCompanyHandler(serv company.Service, tem *template.Template, str *sessions.CookieStore) *CompanyHandler {
 	return &CompanyHandler{compService: serv, tmpl: tem}
 }
 
