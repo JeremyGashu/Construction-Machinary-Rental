@@ -2,26 +2,13 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"html/template"
 	"net/http"
 
-	"github.com/ermiasgashu/Construction-Machinary-Rental/middleware"
-
-	// compRepo "github.com/ermiasgashu/Construction-Machinary-Rental/company/repository"
-	// compService "github.com/ermiasgashu/Construction-Machinary-Rental/company/service"
-	handler "github.com/ermiasgashu/Construction-Machinary-Rental/http/handler"
-	usrRepo "github.com/ermiasgashu/Construction-Machinary-Rental/user/repository"
-	usrService "github.com/ermiasgashu/Construction-Machinary-Rental/user/service"
+	"github.com/ermiasgashu/Construction-Machinary-Rental/admin/repository"
+	"github.com/ermiasgashu/Construction-Machinary-Rental/admin/service"
+	handlers "github.com/ermiasgashu/Construction-Machinary-Rental/http/handler"
 	_ "github.com/lib/pq"
-)
-
-const (
-	host     = "localhost"
-	port     = 5433
-	user     = "postgres"
-	password = "1234"
-	dbname   = "constructiondb"
 )
 
 var templ = template.Must(template.ParseGlob("../ui/templates/*"))
@@ -29,48 +16,81 @@ var templ = template.Must(template.ParseGlob("../ui/templates/*"))
 func index(w http.ResponseWriter, r *http.Request) {
 	templ.ExecuteTemplate(w, "index.layout", nil)
 }
+func login(w http.ResponseWriter, r *http.Request) {
+	templ.ExecuteTemplate(w, "login.layout", nil)
+}
+func loginAs(w http.ResponseWriter, r *http.Request) {
+	templ.ExecuteTemplate(w, "loginAsCompany.layout", nil)
+}
+func admin(w http.ResponseWriter, r *http.Request) {
+	templ.ExecuteTemplate(w, "admin.layout", nil)
+}
+func user(w http.ResponseWriter, r *http.Request) {
+	templ.ExecuteTemplate(w, "user.layout", nil)
+}
+func company(w http.ResponseWriter, r *http.Request) {
 
+	templ.ExecuteTemplate(w, "company.layout", nil)
+}
 func main() {
-
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
-	dbconn, err := sql.Open("postgres", psqlInfo)
+	dbconn, err := sql.Open("postgres", "postgres://postgres:ebsa@localhost/constructiondb?sslmode=disable")
 
 	if err != nil {
 		panic(err)
-	} //this i
+	}
+
 	defer dbconn.Close()
 
 	if err := dbconn.Ping(); err != nil {
 		panic(err)
 	}
+	//admin
+	AdminRepo := repository.NewAdminRepositoryImpl(dbconn)
+	AdminServ := service.NewAdminServiceImpl(AdminRepo)
+	adminAdminsHandler := handlers.NewAdminAdminHandler(templ, AdminServ)
+	//company
+	CompanyRepo := repository.NewCompanyRepositoryImpl(dbconn)
+	CompanyServ := service.NewCompanyServiceImpl(CompanyRepo)
+	adminCompanysHandler := handlers.NewAdminCompanyHandler(templ, CompanyServ)
+	//User
+	UserRepo := repository.NewUserRepositoryImpl(dbconn)
+	UserServ := service.NewUserServiceImpl(UserRepo)
+	adminUsersHandler := handlers.NewAdminUserHandler(templ, UserServ)
 
-	userRepo := usrRepo.NewPsqlUserRepository(dbconn)
-	userService := usrService.NewUserServiceImpl(userRepo)
-	userHandler := handler.NewUserHandler(userService, templ)
+	//Comment
+	CommentRepo := repository.NewCommentRepositoryImpl(dbconn)
+	CommentServ := service.NewCommentServiceImpl(CommentRepo)
+	adminCommentsHandler := handlers.NewAdminCommentHandler(templ, CommentServ)
 
-	// companyRepo := compRepo.NewCompanyRepo(dbconn)
-	// compService := compService.NewCompanyService(companyRepo)
-	// companyHandler := handler.NewCompanyHandler(compService, templ)
-
-	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir("../ui/assets"))
-	mux.Handle("/assets/", http.StripPrefix("/assets/", fs))
+	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
+	http.HandleFunc("/", index)
+	http.HandleFunc("/login", login)
+	http.HandleFunc("/signinCompany", loginAs)
+	http.HandleFunc("/admin", admin)
+	http.HandleFunc("/user", user)
+	http.HandleFunc("/company", company)
 
-	mux.HandleFunc("/", index)
+	//handle admin
+	http.HandleFunc("/admin/admins", adminAdminsHandler.AdminAdmins)
+	http.HandleFunc("/admin/admins/new", adminAdminsHandler.AdminAdminsNew)
+	http.HandleFunc("/admin/admins/update", adminAdminsHandler.AdminAdminsUpdate)
+	http.HandleFunc("/admin/admins/delete", adminAdminsHandler.AdminAdminsDelete)
+	//handle company
+	http.HandleFunc("/admin/company", adminCompanysHandler.AdminCompanys)
+	http.HandleFunc("/admin/company/new", adminCompanysHandler.AdminCompanysNew)
+	http.HandleFunc("/admin/company/update", adminCompanysHandler.AdminCompanysUpdate)
+	http.HandleFunc("/admin/company/delete", adminCompanysHandler.AdminCompanysDelete)
+	//handle user
+	http.HandleFunc("/admin/user", adminUsersHandler.AdminUsers)
+	http.HandleFunc("/admin/user/new", adminUsersHandler.AdminUsersNew)
+	http.HandleFunc("/admin/user/update", adminUsersHandler.AdminUsersUpdate)
+	http.HandleFunc("/admin/user/delete", adminUsersHandler.AdminUsersDelete)
+	//handle user
+	http.HandleFunc("/admin/comment", adminCommentsHandler.AdminComments)
+	http.HandleFunc("/admin/comment/new", adminCommentsHandler.AdminCommentsNew)
+	http.HandleFunc("/admin/comment/update", adminCommentsHandler.AdminCommentsUpdate)
+	http.HandleFunc("/admin/comment/delete", adminCommentsHandler.AdminCommentsDelete)
 
-	mux.HandleFunc("/users", middleware.UserLoginRequired(userHandler.UserSignup)) //TODO needs authentication to access this route
-	mux.HandleFunc("/users/login", userHandler.UserLogin)
-	mux.HandleFunc("/users/signup", userHandler.AddUser)
-	mux.HandleFunc("/users/logout", userHandler.LogOut)
-
-	// mux.HandleFunc("/admin", admin) //TODO admin handlers
-
-	// mux.HandleFunc("/companies/signup", companyHandler.CompanySigup)
-	// //using local host and the default saved username and password
-	// mux.HandleFunc("/companies", companyHandler.CompanyIndex) //TODO needs authentication to access this route
-
-	http.ListenAndServe(":8080", mux)
+	http.ListenAndServe(":8080", nil)
 }
