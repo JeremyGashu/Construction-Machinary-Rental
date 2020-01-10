@@ -1,0 +1,47 @@
+{{define "admin.admins.layout"}}
+{{template "adminnav" .}}
+{{template "admin.admins.content" .}}
+{{template "footer" .}}
+{{end}}
+{{define "admin.admins.content"}}
+<div class="align-content-center">
+
+</div>
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 align-content-center">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2>Menu Admin</h2>
+    </div>
+    <div class="pt-3 pb-2 mb-3">
+        <a class="btn btn-primary btn-lg" href="/admin/admins/new" role="button">New Admin</a>
+    </div>
+    <table class="table table-striped align-content-center">
+        <thead>
+            <tr>
+
+                <th scope="col">UserName</th>
+                <th scope="col">FirstName</th>
+                <th scope="col">LastName</th>
+                <th scope="col">Email</th>
+                <th scope="col">Password</th>
+                <th scope="col">Image</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range . }}
+            <tr>
+
+                <th scope="row"> {{ .Username }} </th>
+                <td> {{ .FirstName }} </td>
+                <td> {{ .LastName }} </td>
+                <td> {{ .Email}} </td>
+                <td> {{ .Password }} </td>
+                <td> <img src="/assets/img/{{ .ImagePath }}" width="70rem" height="70rem" /> </td>
+                <td> <a href="/admin/admins/delete?username={{ .Username }}">Delete</a> </td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</main>
+{{end}}

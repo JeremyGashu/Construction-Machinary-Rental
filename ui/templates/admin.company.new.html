@@ -1,0 +1,66 @@
+{{ define "admin.company.new.layout" }}
+{{ template "adminnav" . }}
+{{ template "admin.company.new.content" . }}
+{{ template "footer" . }}
+{{ end }}
+
+{{ define "admin.company.new.content"}}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2>Add New Company</h2>
+    </div>
+    <div class="container">
+        <form method="POST" action="/admin/company/new" enctype="multipart/form-data">
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Company Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Company Name">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" name="email" id="name" placeholder="Email">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Address</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="address" id="name" placeholder="Address">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Phone</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="phone" id="name" placeholder="Phone">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="description" class="col-sm-2 col-form-label">Description</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" name="password" id="name" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="catimg" class="col-sm-2 col-form-label">Upload Image</label>
+                <div class="col-sm-10">
+                    <input type="file" class="form-control-file" name="catimg" id="catimg">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary float-right">Add Company</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+{{ end }}
