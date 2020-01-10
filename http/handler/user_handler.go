@@ -5,8 +5,6 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/gorilla/sessions"
-
 	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/user"
 )
@@ -15,12 +13,11 @@ import (
 type UserHandler struct {
 	userService user.Service
 	tmpl        *template.Template
-	store       *sessions.CookieStore
 }
 
 //NewUserHandler -
-func NewUserHandler(us user.Service, tmplate *template.Template, str *sessions.CookieStore) *UserHandler {
-	return &UserHandler{userService: us, tmpl: tmplate, store: str}
+func NewUserHandler(us user.Service, tmplate *template.Template) *UserHandler {
+	return &UserHandler{userService: us, tmpl: tmplate}
 }
 
 //AddUser - User Sign up function
@@ -66,10 +63,10 @@ func (uh *UserHandler) UserSignup(w http.ResponseWriter, r *http.Request) {
 
 //UserLogin -
 func (uh *UserHandler) UserLogin(w http.ResponseWriter, r *http.Request) {
-	session, err := uh.store.Get(r, "authentication")
-	if err != nil {
-		fmt.Println(err)
-	}
+	// session, err := uh.store.Get(r, "authentication")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 	if r.Method == http.MethodPost {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
@@ -83,9 +80,9 @@ func (uh *UserHandler) UserLogin(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		} //here we checked if the username exists
 		if usr.Password == password {
-			session.Values["user_username"] = username
-			session.Save(r, w)
-			uh.tmpl.ExecuteTemplate(w, "user.layout", nil)
+			// session.Values["user_username"] = username
+			// session.Save(r, w)
+			// uh.tmpl.ExecuteTemplate(w, "user.layout", nil)
 
 		} else {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -99,11 +96,11 @@ func (uh *UserHandler) UserLogin(w http.ResponseWriter, r *http.Request) {
 
 //LogOut -
 func (uh *UserHandler) LogOut(w http.ResponseWriter, r *http.Request) {
-	session, err := uh.store.Get(r, "authentication")
-	if err != nil {
-		panic(err)
-	}
-	session.Options.MaxAge = -1
-	session.Save(r, w)
+	// session, err := uh.store.Get(r, "authentication")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// session.Options.MaxAge = -1
+	// session.Save(r, w)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

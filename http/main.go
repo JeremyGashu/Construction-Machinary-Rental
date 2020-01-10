@@ -6,11 +6,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/ermiasgashu/Construction-Machinary-Rental/sessionprovider"
-
 	"github.com/ermiasgashu/Construction-Machinary-Rental/middleware"
-
-	"github.com/gorilla/sessions"
 
 	compRepo "github.com/ermiasgashu/Construction-Machinary-Rental/company/repository"
 	compService "github.com/ermiasgashu/Construction-Machinary-Rental/company/service"
@@ -29,7 +25,6 @@ const (
 )
 
 var templ = template.Must(template.ParseGlob("../ui/templates/*"))
-var store *sessions.CookieStore = sessionprovider.Store
 
 func index(w http.ResponseWriter, r *http.Request) {
 	templ.ExecuteTemplate(w, "index.layout", nil)
@@ -54,11 +49,11 @@ func main() {
 
 	userRepo := usrRepo.NewPsqlUserRepository(dbconn)
 	userService := usrService.NewUserServiceImpl(userRepo)
-	userHandler := handler.NewUserHandler(userService, templ, store)
+	userHandler := handler.NewUserHandler(userService, templ)
 
 	companyRepo := compRepo.NewCompanyRepo(dbconn)
 	compService := compService.NewCompanyService(companyRepo)
-	companyHandler := handler.NewCompanyHandler(compService, templ, store)
+	companyHandler := handler.NewCompanyHandler(compService, templ)
 
 	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir("../ui/assets"))
