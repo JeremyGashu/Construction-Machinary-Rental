@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
 	"net/http"
 
@@ -25,20 +26,33 @@ func loginAs(w http.ResponseWriter, r *http.Request) {
 func admin(w http.ResponseWriter, r *http.Request) {
 	templ.ExecuteTemplate(w, "admin.layout", nil)
 }
-func user(w http.ResponseWriter, r *http.Request) {
+func userr(w http.ResponseWriter, r *http.Request) {
 	templ.ExecuteTemplate(w, "user.layout", nil)
 }
 func company(w http.ResponseWriter, r *http.Request) {
 
 	templ.ExecuteTemplate(w, "company.layout", nil)
 }
+
+const (
+	host     = "localhost"
+	port     = 5433
+	user     = "postgres"
+	password = "1234"
+	dbname   = "constructiondb"
+)
+
 func main() {
-	dbconn, err := sql.Open("postgres", "postgres://postgres:ebsa@localhost/constructiondb?sslmode=disable")
+
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+
+	dbconn, err := sql.Open("postgres", psqlInfo)
 
 	if err != nil {
 		panic(err)
-	}
-
+	} //this i
 	defer dbconn.Close()
 
 	if err := dbconn.Ping(); err != nil {
@@ -68,7 +82,7 @@ func main() {
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/signinCompany", loginAs)
 	http.HandleFunc("/admin", admin)
-	http.HandleFunc("/user", user)
+	http.HandleFunc("/user", userr)
 	http.HandleFunc("/company", company)
 
 	//handle admin

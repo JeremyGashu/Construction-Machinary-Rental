@@ -12,7 +12,7 @@ type CompanyRepository interface {
 }
 
 //AdminRepository ..
-type AdminRepository interface {
+type AdminRepo interface {
 	Admins() ([]entity.Admin, error)
 	Admin(uname string) (entity.Admin, error)
 	UpdateAdmin(Admin entity.Admin) error

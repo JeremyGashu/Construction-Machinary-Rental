@@ -7,11 +7,11 @@ import (
 
 // AdminServiceImpl implements menu.AdminService interface
 type AdminServiceImpl struct {
-	AdminRepo admin.AdminRepository
+	AdminRepo admin.AdminRepo
 }
 
 // NewAdminServiceImpl will create new AdminService object
-func NewAdminServiceImpl(CatRepo admin.AdminRepository) *AdminServiceImpl {
+func NewAdminServiceImpl(CatRepo admin.AdminRepo) *AdminServiceImpl {
 	return &AdminServiceImpl{AdminRepo: CatRepo}
 }
 

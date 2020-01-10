@@ -7,11 +7,11 @@ import (
 
 //AdminService -
 type AdminService struct {
-	repository repository.AdminRepo
+	repository repository.AdminRepositoryImpl
 }
 
 //NewAdminService -
-func NewAdminService(repo repository.AdminRepo) *AdminService {
+func NewAdminService(repo repository.AdminRepositoryImpl) *AdminService {
 	return &AdminService{repository: repo}
 }
 
@@ -35,7 +35,7 @@ func (ar *AdminService) Admin(username string) (entity.Admin, error) {
 
 //AddAdmin -
 func (ar *AdminService) AddAdmin(admin entity.Admin) error {
-	err := ar.repository.AddAdmin(admin)
+	err := ar.repository.StoreAdmin(admin)
 	if err != nil {
 		return err
 	}
