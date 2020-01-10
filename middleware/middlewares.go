@@ -5,7 +5,7 @@ import (
 )
 
 //UserLoginRequired - middleware to check if the user us authenticated
-func UserLoginRequired(handler http.HandlerFunc) http.HandlerFunc {
+func UserLoginRequired(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// session, err := sessionprovider.Store.Get(r, "authentication")
 		// if err != nil {
@@ -19,6 +19,6 @@ func UserLoginRequired(handler http.HandlerFunc) http.HandlerFunc {
 		// }
 		// fmt.Println("The logged in user's username is ", value)
 		// // http.Redirect(w, r, "/users", http.StatusSeeOther)
-		handler.ServeHTTP(w, r)
+		next.ServeHTTP(w, r)
 	}
 }

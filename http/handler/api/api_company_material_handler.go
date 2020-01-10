@@ -16,11 +16,27 @@ func NewCompanyMaterialHandler(mat company.MaterialService) *CompanyMaterialHand
 	return &CompanyMaterialHandler{materials: mat}
 }
 
-//AllMaterials - GET /
-func (ch *CompanyMaterialHandler) AllMaterials(w http.ResponseWriter, r *http.Request) {
+//Materials - GET /
+func (ch *CompanyMaterialHandler) Materials(w http.ResponseWriter, r *http.Request) {
 
 }
 
+//DeleteMaterial -
 func (ch *CompanyMaterialHandler) DeleteMaterial(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//StoreMaterial -
+func (ch *CompanyMaterialHandler) StoreMaterial(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//Material -
+func (ch *CompanyMaterialHandler) Material(w http.ResponseWriter, r *http.Request) {
+
+}
+
+//UpdateMaterial -
+func (ch *CompanyMaterialHandler) UpdateMaterial(w http.ResponseWriter, r *http.Request) {
 
 }
