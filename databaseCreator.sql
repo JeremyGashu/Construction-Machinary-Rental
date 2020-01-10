@@ -5,7 +5,6 @@ create table users(
     email varchar(256) not null,
     phone varchar(20) not null,
     address varchar(256) not null,
-    postnum varchar(20) not null,
     password varchar(256) not null,
     imagepath text default 'defaultuser.jpg',
     account numeric default 200000
@@ -19,7 +18,8 @@ create table companies (
     address varchar(256) not null,
     rating int default 0;
     imagepath text default 'defaultcompany.jpg',
-    password varchar(256) not null
+    password varchar(256) not null,
+    account numeric default 200000
 );
 --material type
 
@@ -35,4 +35,10 @@ create table materials(
     imagepath text default 'defaultmaterial.jpg'
 );
 
-
+create table admin (
+    username varchar(256) primary key,
+    firstname varchar(256) not null,
+    lastname varchar(256) not null,
+    email varchar(256) not null,
+    password varchar(1000) not null,
+);
