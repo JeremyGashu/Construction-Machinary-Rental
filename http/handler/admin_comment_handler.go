@@ -26,11 +26,20 @@ func NewAdminCommentHandler(T *template.Template, CS admin.CommentService) *Admi
 // AdminComments handle requests on route /admin/Comments
 func (ach *AdminCommentHandler) AdminComments(w http.ResponseWriter, r *http.Request) {
 	Comments, err := ach.CommentSrv.Comments()
+	
 	if err != nil {
 		panic(err)
 	}
 	ach.tmpl.ExecuteTemplate(w, "admin.comment.layout", Comments)
 }
+
+// func (ach *AdminCommentHandler) APIAdminComments(w http.ResponseWriter, r *http.Request) {
+// 	Comments, err := ach.CommentSrv.Comments()
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	json.NewEncoder(w).Encode(Comments)
+// }
 
 // AdminCommentsNew hanlde requests on route /admin/Comments/new
 func (ach *AdminCommentHandler) AdminCommentsNew(w http.ResponseWriter, r *http.Request) {

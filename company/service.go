@@ -1,4 +1,4 @@
-package material
+package company
 
 import "github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 

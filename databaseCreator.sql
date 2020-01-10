@@ -27,7 +27,8 @@ create table companies (
     rating int default 0,
     imagepath text default 'defaultcompany.jpg',
     password varchar(256) not null,
-    account numeric default 200000
+    account numeric default 200000,
+    activated bool default false
 );
 
 create table comments (
