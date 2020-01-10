@@ -7,11 +7,8 @@
 <!--section slider-->
 <section class="slider">
     <ul class="slides">
-        <!-- {{ if . }}
-            <script>alert("Now You Can Log in!!!");</script>
-        {{end}} -->
         <li>
-            <img src="/assets/img/b.jpeg" alt="img1">
+            <img src="assets/img/b.jpeg" alt="img1">
             <div class="caption center-align">
                 <h2>Tools based on your preference</h2>
                 <h5 class="light grey-text text-lighten-3">Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -20,7 +17,7 @@
             </div>
         </li>
         <li>
-            <img src="/assets/img/nmcn.jpg" alt="img2">
+            <img src="assets/img/nmcn.jpg" alt="img2">
             <div class="caption left-align">
                 <h2>Tools based on your pice range preference</h2>
                 <h5 class="light grey-text text-lighten-3">Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -29,7 +26,7 @@
             </div>
         </li>
         <li>
-            <img src="/assets/img/yellow_hat.jpg" alt="img3">
+            <img src="assets/img/yellow_hat.jpg" alt="img3">
             <div class="caption right-align">
                 <h2>Over 1000 Local Ethiopian Rental Companies and More</h2>
                 <h5 class="light grey-text text-lighten-3">Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -94,7 +91,7 @@
             <div class="col s12 m4">
                 <div class="card">
                     <div class="card-image">
-                        <img src="/assets/img/excav.png" alt="">
+                        <img src="assets/img/excav.png" alt="">
                         <span class="card-title">
                             Cacune mexico
                         </span>
@@ -107,7 +104,7 @@
             <div class="col s12 m4">
                 <div class="card">
                     <div class="card-image">
-                        <img src="/assets/img/nmcn.jpg" alt="">
+                        <img src="assets/img/nmcn.jpg" alt="">
                         <span class="card-title">
                             Cacune mexico
                         </span>
@@ -120,7 +117,7 @@
             <div class="col s12 m4">
                 <div class="card">
                     <div class="card-image">
-                        <img src="/assets/img/South-African-construction-industry.jpg" alt="">
+                        <img src="assets/img/South-African-construction-industry.jpg" alt="">
                         <span class="card-title">
                             Cacune mexico
                         </span>
@@ -164,32 +161,32 @@
         </h4>
         <div class="row">
             <div class="col s12 m3">
-                <img src="/assets/img/yellow_hat.jpg" alt="" class="materialboxed responsive-img">
+                <img src="assets/img/yellow_hat.jpg" alt="" class="materialboxed responsive-img">
             </div>
             <div class="col s12 m3">
-                <img src="/assets/img/South-African-construction-industry.jpg" alt=""
+                <img src="assets/img/South-African-construction-industry.jpg" alt=""
                     class="materialboxed responsive-img">
             </div>
             <div class="col s12 m3">
-                <img src="/assets/img/excav.png" alt="" class="materialboxed responsive-img">
+                <img src="assets/img/excav.png" alt="" class="materialboxed responsive-img">
             </div>
             <div class="col s12 m3">
-                <img src="/assets/img/nmcn.jpg" alt="" class="materialboxed responsive-img">
+                <img src="assets/img/nmcn.jpg" alt="" class="materialboxed responsive-img">
             </div>
 
         </div>
         <div class="row">
             <div class="col s12 m3">
-                <img src="/assets/img/a.jpeg" alt="" class="materialboxed responsive-img">
+                <img src="assets/img/a.jpeg" alt="" class="materialboxed responsive-img">
             </div>
             <div class="col s12 m3">
-                <img src="/assets/img/b.jpg" alt="" class="materialboxed responsive-img">
+                <img src="assets/img/b.jpg" alt="" class="materialboxed responsive-img">
             </div>
             <div class="col s12 m3">
-                <img src="/assets/img/b.jpeg" alt="" class="materialboxed responsive-img">
+                <img src="assets/img/b.jpeg" alt="" class="materialboxed responsive-img">
             </div>
             <div class="col s12 m3">
-                <img src="/assets/img/2.jpg" alt="" class="materialboxed responsive-img">
+                <img src="assets/img/2.jpg" alt="" class="materialboxed responsive-img">
             </div>
         </div>
 
@@ -212,6 +209,49 @@
         </div>
     </div>
 </section>
+<!-- login form put in the form -->
+<div class="modal modal-fixed-footer" id="login">
+    <form action="admin" method="POST">
+        <div class="modal-conent">
+            <div class="container">
+                <h2 class="center"><i class="material-icons center large red-text">person</i>Login</h2>
 
+                <div class="row">
+
+                    <div class="col m12 s12">
+                        <div class="input-field">
+                            <i class="material-icons prefix">person</i>
+                            <input type="text" name="username">
+                            <label>Username</label>
+                        </div>
+                        <div class="input-field">
+                            <i class="material-icons prefix">lock</i>
+                            <input type="password" name="pass1">
+                            <label>Password</label>
+                        </div>
+                        <p>
+                            <label>
+                                <input type="checkbox">
+                                <span>Remember me</span>
+                            </label>
+                        </p>
+                    </div>
+                    <div class="right">
+                        <input type="submit" name="submit" value="login" class="btn pulse grey darken-4">
+                        <input type="button" value="close" class="btn modal-close red darken-2">
+
+                    </div>
+
+                    <div>
+                        <p class="left">Are you New? <a href="login" class="modal-trigger">Register</a></p>
+
+                    </div>
+
+
+                </div>
+            </div><!-- end of modal container -->
+        </div>
+
+</div>
 
 {{end}}

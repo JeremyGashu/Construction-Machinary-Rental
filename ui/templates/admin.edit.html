@@ -1,0 +1,59 @@
+{{ define "admin.admins.update.layout" }}
+{{ template "adminnav" . }}
+{{ template "admin.admins.update.content" . }}
+{{ template "footer" . }}
+{{ end }}
+
+{{ define "admin.admins.update.content"}}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2>Update Menu Admin</h2>
+    </div>
+    <form method="POST" action="/admin/admins/update" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="{{ .Username }}" />
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">FirstName</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="firstname" id="firstname" placeholder="FirstName"
+                    value="{{ if .FirstName }} {{ .FirstName }} {{ end }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">LastName</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="lastname" id="lastname" placeholder="LastName"
+                    value="{{ if .LastName }} {{ .LastName }} {{ end }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">Email</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" name="email" id="email" placeholder="Email"
+                    value="{{ if .Email }} {{ .Email }} {{ end }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">Password</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="password" id="password" placeholder="Password"
+                    value="{{ if .Password }} {{ .Password }} {{ end }}">
+            </div>
+        </div>
+        <div class="col-sm-10">
+            <img src="/assets/img/{{ .ImagePath }}" width="80px" height="80px" />
+        </div>
+        <div class="form-group">
+            <label for="catimg" class="col-sm-2 col-form-label">Upload New Image</label>
+            <div class="col-sm-10">
+                <input type="file" class="form-control-file" name="catimg" id="catimg">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary float-right">Done</button>
+            </div>
+        </div>
+    </form>
+</main>
+{{ end }}

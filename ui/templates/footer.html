@@ -1,7 +1,8 @@
 {{define "footer"}}
-<script type="text/javascript" src="/assets/js/materialize.min.js"></script>
+</div>
+<script type="text/javascript" src="assets/js/materialize.min.js"></script>
 <script>
-    sidenav
+    //sidenav
     const sidenav = document.querySelector('.sidenav');
     M.Sidenav.init(sidenav, {});
     //slider
@@ -13,18 +14,23 @@
         interval: 6000,
 
     });
-    autocomplet
-    const ac = document.querySelector('.autocomplete-content');
-    M.autocomplete - content.init(ac, {
-        data: {
-            "Sherato-Addis-Hotel-Addis-Ababa": null,
-            "Hilton-Hotel-Addis-Ababa": null,
-            "Caplital-International-Hotel-Addis-Ababa": null,
-            "Jupiter-International-Addis-Ababa": null,
-            "Pyramid-Hotel-Bishoftu": null,
-            "Haile-Resorte-Hawasa": null,
-        }
+    //pop-up
+    const login = document.querySelectorAll(".modal");
+    M.Modal.init(login, {
+        opacity: 0.5,
+        dismissible: false
     });
+
+
+    document.querySelector("#content").style.display = "none";
+    document.querySelector("#flayer").classList.add("progress");
+    document.querySelector("#slayer").classList.add("indeterminate");
+
+    setTimeout(function () {
+        document.querySelector("#flayer").classList.remove("progress");
+        document.querySelector("#slayer").classList.remove("indeterminate");
+        document.querySelector("#content").style.display = "block";
+    }, 500)
 </script>
 </body>
 
