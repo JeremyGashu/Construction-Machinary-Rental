@@ -8,8 +8,8 @@ import (
 
 	"github.com/ermiasgashu/Construction-Machinary-Rental/middleware"
 
-	compRepo "github.com/ermiasgashu/Construction-Machinary-Rental/company/repository"
-	compService "github.com/ermiasgashu/Construction-Machinary-Rental/company/service"
+	// compRepo "github.com/ermiasgashu/Construction-Machinary-Rental/company/repository"
+	// compService "github.com/ermiasgashu/Construction-Machinary-Rental/company/service"
 	handler "github.com/ermiasgashu/Construction-Machinary-Rental/http/handler"
 	usrRepo "github.com/ermiasgashu/Construction-Machinary-Rental/user/repository"
 	usrService "github.com/ermiasgashu/Construction-Machinary-Rental/user/service"
@@ -51,9 +51,9 @@ func main() {
 	userService := usrService.NewUserServiceImpl(userRepo)
 	userHandler := handler.NewUserHandler(userService, templ)
 
-	companyRepo := compRepo.NewCompanyRepo(dbconn)
-	compService := compService.NewCompanyService(companyRepo)
-	companyHandler := handler.NewCompanyHandler(compService, templ)
+	// companyRepo := compRepo.NewCompanyRepo(dbconn)
+	// compService := compService.NewCompanyService(companyRepo)
+	// companyHandler := handler.NewCompanyHandler(compService, templ)
 
 	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir("../ui/assets"))
@@ -68,8 +68,9 @@ func main() {
 
 	// mux.HandleFunc("/admin", admin) //TODO admin handlers
 
-	mux.HandleFunc("/companies/signup", companyHandler.CompanySigup)
-	mux.HandleFunc("/companies", companyHandler.CompanyIndex) //TODO needs authentication to access this route
+	// mux.HandleFunc("/companies/signup", companyHandler.CompanySigup)
+	// //using local host and the default saved username and password
+	// mux.HandleFunc("/companies", companyHandler.CompanyIndex) //TODO needs authentication to access this route
 
 	http.ListenAndServe(":8080", mux)
 }
