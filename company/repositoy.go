@@ -2,7 +2,7 @@ package material
 
 import "github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 
-type MaterialService interface {
+type MaterialRepository interface {
 	Materials() ([]entity.Material, error)
 	Material(id int) (entity.Material, error)
 	UpdateMaterial(material entity.Material) error
