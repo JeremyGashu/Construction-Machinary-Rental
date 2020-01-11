@@ -115,10 +115,11 @@ func main() {
 	router.GET("/admin/company/update", adminCompanysHandler.AdminCompanysUpdate)
 	router.GET("/admin/company/delete", adminCompanysHandler.AdminCompanysDelete)
 	//handle user
-	http.HandleFunc("/admin/user", adminUsersHandler.AdminUsers)
-	http.HandleFunc("/admin/user/new", adminUsersHandler.AdminUsersNew)
-	http.HandleFunc("/admin/user/update", adminUsersHandler.AdminUsersUpdate)
-	http.HandleFunc("/admin/user/delete", adminUsersHandler.AdminUsersDelete)
+	router.GET("/admin/user", adminUsersHandler.AdminUsers)
+	router.POST("/admin/user/new", adminUsersHandler.AdminUsersNew)
+	router.GET("/admin/user/new", adminUsersHandler.AdminUsersNew)
+	router.PUT("/admin/user/update", adminUsersHandler.AdminUsersUpdate)
+	router.GET("/admin/users/delete", adminUsersHandler.AdminUsersDelete)
 	//handle user
 	http.HandleFunc("/admin/comment", adminCommentsHandler.AdminComments)
 	http.HandleFunc("/admin/comment/new", adminCommentsHandler.AdminCommentsNew)

@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/julienschmidt/httprouter"
+
 	"github.com/ermiasgashu/Construction-Machinary-Rental/admin"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 )
@@ -22,7 +24,7 @@ func NewAdminUserHandler(T *template.Template, CS admin.UserService) *AdminUserH
 }
 
 // AdminUsers handle requests on route /admin/users
-func (ach *AdminUserHandler) AdminUsers(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminUserHandler) AdminUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	Users, err := ach.UserSrv.Users()
 	if err != nil {
 		panic(err)
@@ -31,10 +33,9 @@ func (ach *AdminUserHandler) AdminUsers(w http.ResponseWriter, r *http.Request) 
 }
 
 // AdminUsersNew hanlde requests on route /admin/Users/new
-func (ach *AdminUserHandler) AdminUsersNew(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminUserHandler) AdminUsersNew(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodPost {
-
 		ctg := entity.User{}
 		ctg.Username = r.FormValue("username")
 		ctg.FirstName = r.FormValue("firstname")
@@ -73,7 +74,7 @@ func (ach *AdminUserHandler) AdminUsersNew(w http.ResponseWriter, r *http.Reques
 }
 
 // AdminUsersUpdate handle requests on /User/categories/update
-func (ach *AdminUserHandler) AdminUsersUpdate(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminUserHandler) AdminUsersUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodGet {
 
@@ -133,7 +134,7 @@ func (ach *AdminUserHandler) AdminUsersUpdate(w http.ResponseWriter, r *http.Req
 }
 
 // AdminUsersDelete handle requests on route /User/categories/delete
-func (ach *AdminUserHandler) AdminUsersDelete(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminUserHandler) AdminUsersDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodGet {
 
