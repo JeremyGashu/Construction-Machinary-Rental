@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
 	"net/http"
 
@@ -47,12 +48,16 @@ const (
 )
 
 func main() {
-	dbconn, err := sql.Open("postgres", "postgres://postgres:ebsa@localhost/constructiondb?sslmode=disable")
+
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+
+	dbconn, err := sql.Open("postgres", psqlInfo)
 
 	if err != nil {
 		panic(err)
-	}
-
+	} //this i
 	defer dbconn.Close()
 
 	if err := dbconn.Ping(); err != nil {
@@ -133,8 +138,9 @@ func main() {
 
 	router.GET("/v1/companies/materials", hand.Materials)
 	router.GET("/v1/companies/materials/:material_id", hand.Material)
+	router.PUT("/v1/companies/materials/:id", hand.UpdateMaterial)
 	router.DELETE("/v1/companies/materials/delete/:material_id", hand.DeleteMaterial)
-	router.POST("/v1/companies/materials/", hand.StoreMaterial)
+	router.POST("/v1/companies/materials", hand.StoreMaterial)
 	//handle company api
 	router.GET("/v1/admin/company/:id", apiAdminCompanysHandler.GetSingleCompany)
 	router.GET("/v1/admin/company", apiAdminCompanysHandler.GetCompanys)
@@ -153,5 +159,5 @@ func main() {
 	router.PUT("/v1/admin/admins/:username", apiAdminAdminsHandler.PutAdmin)
 	router.POST("/v1/admin/admins", apiAdminAdminsHandler.PostAdmin)
 	router.DELETE("/v1/admin/admins/:username", apiAdminAdminsHandler.DeleteAdmin)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", router)
 }

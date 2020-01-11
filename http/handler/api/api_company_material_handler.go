@@ -67,15 +67,16 @@ func (ch *CompanyMaterialHandler) StoreMaterial(w http.ResponseWriter, r *http.R
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
-	errs := ch.materials.AddMaterial(*material)
+	fmt.Println(material)
+	err = ch.materials.AddMaterial(*material)
 
-	if errs != nil {
+	if err != nil {
+		fmt.Println(err)
 		w.Header().Set("Content-Type", "application/json")
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
-
-	p := fmt.Sprintf("/v1/admin/Users/%s", material.Name)
+	p := fmt.Sprintf("/v1/companies/materials")
 	w.Header().Set("Location", p)
 	w.WriteHeader(http.StatusCreated)
 	return
@@ -96,10 +97,56 @@ func (ch *CompanyMaterialHandler) Material(w http.ResponseWriter, r *http.Reques
 		w.Write([]byte(err.Error()))
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(material)
 }
 
 //UpdateMaterial -
-func (ch *CompanyMaterialHandler) UpdateMaterial(w http.ResponseWriter, r *http.Request) {
+func (ch *CompanyMaterialHandler) UpdateMaterial(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id, err := strconv.Atoi(ps.ByName("id"))
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
 
+	material, errs := ch.materials.Material(id)
+
+	if errs != nil {
+
+		fmt.Println(errs)
+		w.Header().Set("Content-Type", "application/json")
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	l := r.ContentLength
+
+	body := make([]byte, l)
+
+	r.Body.Read(body)
+
+	json.Unmarshal(body, &material)
+
+	errs = ch.materials.UpdateMaterial(material)
+
+	if errs != nil {
+
+		fmt.Println(errs)
+		w.Header().Set("Content-Type", "application/json")
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	output, err := json.MarshalIndent(material, "", "\t\t")
+
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(output)
+	return
 }
