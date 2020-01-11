@@ -1,0 +1,67 @@
+{{ define "company.material.update.layout" }}
+{{ template "companynav" . }}
+{{ template "company.material.update.content" . }}
+{{ template "footer" . }}
+{{ end }}
+
+{{ define "company.material.update.content"}}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2>Update Menu Material</h2>
+    </div>
+    <form method="POST" action="/company/material/update" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="{{ .ID }}" />
+        <input type="hidden" name="id" value="{{ .Owner }}" />
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">Material Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="name" id="firstname" placeholder="Material Name"
+                    value="{{ if .Name }} {{ .Name }} {{ end }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">Price Per Day</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="priceperday" id="lastname" placeholder="Price Per Day"
+                    value="{{ if .PricePerDay }} {{ .PricePerDay }} {{ end }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">On Discount</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="ondiscount" id="email" placeholder="On Discount"
+                    value="{{ if .OnDiscount }} {{ .OnDiscount }} {{ end }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">Discount</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="discount" id="password" placeholder="Discount"
+                    value="{{ if .OnDiscount }} {{ .OnDiscount }} {{ end }}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">OnSale </label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="onsale " id="password" placeholder="onsale "
+                    value="{{ if .OnSale  }} {{ .OnSale  }} {{ end }}">
+            </div>
+        </div>
+        <div class="col-sm-10">
+            <img src="/assets/img/{{ .ImagePath }}" width="80px" height="80px" />
+        </div>
+        <div class="form-group">
+            <label for="catimg" class="col-sm-2 col-form-label">Upload New Image</label>
+            <div class="col-sm-10">
+                <input type="file" class="form-control-file" name="catimg" id="catimg">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary float-right">Done</button>
+            </div>
+        </div>
+    </form>
+</main>
+{{ end }}
