@@ -6,9 +6,14 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/julienschmidt/httprouter"
+
 	"github.com/ermiasgashu/Construction-Machinary-Rental/admin/repository"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/admin/service"
+	comprep "github.com/ermiasgashu/Construction-Machinary-Rental/company/repository"
+	compser "github.com/ermiasgashu/Construction-Machinary-Rental/company/service"
 	handlers "github.com/ermiasgashu/Construction-Machinary-Rental/http/handler"
+	"github.com/ermiasgashu/Construction-Machinary-Rental/http/handler/api"
 	_ "github.com/lib/pq"
 )
 
@@ -65,6 +70,12 @@ func main() {
 	//company
 	CompanyRepo := repository.NewCompanyRepositoryImpl(dbconn)
 	CompanyServ := service.NewCompanyServiceImpl(CompanyRepo)
+
+	materialRepo := comprep.NewMaterialRepository(dbconn)
+	ser := compser.NewMaterialService(materialRepo)
+	hand := api.NewCompanyMaterialHandler(ser)
+	// serv := api.NewCompanyMaterialHandler(materialSer)
+	// ap := api.NewCompanyUseCaseHander(*CompanyServ)
 	adminCompanysHandler := handlers.NewAdminCompanyHandler(templ, CompanyServ)
 	//User
 	UserRepo := repository.NewUserRepositoryImpl(dbconn)
@@ -106,5 +117,12 @@ func main() {
 	http.HandleFunc("/admin/comment/update", adminCommentsHandler.AdminCommentsUpdate)
 	http.HandleFunc("/admin/comment/delete", adminCommentsHandler.AdminCommentsDelete)
 
-	http.ListenAndServe(":8080", nil)
+	// http.HandleFunc("/v1/companies/login", ap.Login)
+	// http.HandleFunc("/v1/companies/secret", middleware.IsAuthorized(ap.Secret))
+	router := httprouter.New()
+
+	router.GET("/v1/companies/materials", hand.Materials)
+	router.DELETE("/v1/companies/materials/delete/:material_id", hand.DeleteMaterial)
+
+	http.ListenAndServe(":8080", router)
 }
