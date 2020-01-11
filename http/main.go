@@ -19,22 +19,22 @@ import (
 
 var templ = template.Must(template.ParseGlob("../ui/templates/*"))
 
-func index(w http.ResponseWriter, r *http.Request) {
+func index(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	templ.ExecuteTemplate(w, "index.layout", nil)
 }
-func login(w http.ResponseWriter, r *http.Request) {
+func login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	templ.ExecuteTemplate(w, "login.layout", nil)
 }
-func loginAs(w http.ResponseWriter, r *http.Request) {
+func loginAs(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	templ.ExecuteTemplate(w, "loginAsCompany.layout", nil)
 }
-func admin(w http.ResponseWriter, r *http.Request) {
+func admin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	templ.ExecuteTemplate(w, "admin.layout", nil)
 }
-func userr(w http.ResponseWriter, r *http.Request) {
+func userr(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	templ.ExecuteTemplate(w, "user.layout", nil)
 }
-func company(w http.ResponseWriter, r *http.Request) {
+func company(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	templ.ExecuteTemplate(w, "company.layout", nil)
 }
@@ -90,14 +90,15 @@ func main() {
 	CommentServ := service.NewCommentServiceImpl(CommentRepo)
 	adminCommentsHandler := handlers.NewAdminCommentHandler(templ, CommentServ)
 
-	fs := http.FileServer(http.Dir("../ui/assets"))
-	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
-	http.HandleFunc("/", index)
-	http.HandleFunc("/login", login)
-	http.HandleFunc("/signinCompany", loginAs)
-	http.HandleFunc("/admin", admin)
-	http.HandleFunc("/user", userr)
-	http.HandleFunc("/company", company)
+	// fs := http.FileServer(http.Dir("../ui/assets"))
+	router.ServeFiles("/assets/*filepath", http.Dir("../ui/assets"))
+	// http.Handle("/assets/", http.StripPrefix("/assets/", fs))
+	router.GET("/", index)
+	router.GET("/login", login)
+	router.GET("/signinCompany", loginAs)
+	router.GET("/admin", admin)
+	router.GET("/user", userr)
+	router.GET("/company", company)
 
 	//handle admin
 	// router := httprouter.New()
