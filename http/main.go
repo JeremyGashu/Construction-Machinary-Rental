@@ -126,7 +126,9 @@ func main() {
 	// http.HandleFunc("/v1/companies/secret", middleware.IsAuthorized(ap.Secret))
 
 	router.GET("/v1/companies/materials", hand.Materials)
+	router.GET("/v1/companies/materials/:material_id", hand.Material)
 	router.DELETE("/v1/companies/materials/delete/:material_id", hand.DeleteMaterial)
+	router.POST("/v1/companies/materials/", hand.StoreMaterial)
 	//handle company api
 	router.GET("/v1/admin/company/:id", apiAdminCompanysHandler.GetSingleCompany)
 	router.GET("/v1/admin/company", apiAdminCompanysHandler.GetCompanys)

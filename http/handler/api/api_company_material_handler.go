@@ -50,13 +50,26 @@ func (ch *CompanyMaterialHandler) DeleteMaterial(w http.ResponseWriter, r *http.
 }
 
 //StoreMaterial -
-func (ch *CompanyMaterialHandler) StoreMaterial(w http.ResponseWriter, r *http.Request) {
-
+func (ch *CompanyMaterialHandler) StoreMaterial(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	
 }
 
 //Material -
-func (ch *CompanyMaterialHandler) Material(w http.ResponseWriter, r *http.Request) {
-
+func (ch *CompanyMaterialHandler) Material(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id := ps.ByName("material_id")
+	ID, err := strconv.Atoi(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	material, err := ch.materials.Material(ID)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	json.NewEncoder(w).Encode(material)
 }
 
 //UpdateMaterial -
