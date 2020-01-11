@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/julienschmidt/httprouter"
 )
 
 var mySigningKey = []byte("some-tempo-key")
@@ -28,47 +29,55 @@ func UserLoginRequired(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func CompanyLoginRequired(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		// session, err := sessionprovider.Store.Get(r, "authentication")
-		// user, err := r.Cookie("company_id")
-		// if err != nil {
-		// 	w.WriteHeader(http.StatusUnauthorized)
-		// 	w.Write([]byte("Status Unauthorized, Please login first"))
-		// 	return
-		// }
-		next.ServeHTTP(w, r)
-	}
-}
+//CompanyLoginRequired -
+func CompanyLoginRequired(next httprouter.Handle) httprouter.Handle {
 
-func IsAuthorized(next http.HandlerFunc) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		if r.Header["Token"] != nil {
-
 			token, err := jwt.Parse(r.Header["Token"][0], func(token *jwt.Token) (interface{}, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 					return nil, fmt.Errorf("There was an error")
 				}
-
-				return mySigningKey, nil
+				return []byte("secret-key"), nil
 			})
-			// if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			// 	fmt.Println(claims)
-			// }
 
+			// fmt.Println(token)
 			if err != nil {
-				fmt.Fprintf(w, err.Error())
+				fmt.Println(err)
 			}
-
-			fmt.Println(token)
-
 			if token.Valid {
-				next(w, r)
+				// fmt.Println(token.Claims.(jwt.MapClaims)["logged-company"].(map[string]interface{})["email"])
+				//GETTING THE CLAIM AFTER LONG TRY
+				next(w, r, ps)
 			}
+			return
 		} else {
-
-			fmt.Fprintf(w, "Not Authorized")
+			w.Header().Set("Content-Type", "application/json")
+			w.Write([]byte("Token is not sent"))
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
 		}
-	})
+	}
 }
+
+// //CompanyLoginRequired -
+// func CompanyLoginRequired(next http.HandlerFunc) http.HandlerFunc {
+// 	return func(w http.ResponseWriter, r *http.Request) {
+// 		token, err := jwt.Parse(r.Header["Token"][0], func(token *jwt.Token) (interface{}, error) {
+// 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+// 				return nil, fmt.Errorf("There was an error")
+// 			}
+// 			return []byte("secret-key"), nil
+// 		})
+
+// 		// fmt.Println(token)
+// 		if err != nil {
+// 			fmt.Println(err)
+// 		}
+// 		if token.Valid {
+// 			fmt.Println("Congrats...")
+// 			next.ServeHTTP(w, r)
+// 		}
+// 		return
+// 	}
+// }

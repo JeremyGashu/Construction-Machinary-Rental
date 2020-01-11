@@ -26,7 +26,7 @@ func (ach *CompanyMaterialHandler) CompanyMaterials(w http.ResponseWriter, r *ht
 	Materials, err := ach.MaterialSrv.Materials()
 	if err != nil {
 		panic(err)
-		fmt.Println(err)
+		// fmt.Println(err)
 	}
 	ach.tmpl.ExecuteTemplate(w, "company.material.layout", Materials)
 }

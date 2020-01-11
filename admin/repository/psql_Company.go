@@ -87,3 +87,22 @@ func (cri *CompanyRepositoryImpl) StoreCompany(c entity.Company) error {
 
 	return nil
 }
+
+//AuthCompany -
+func (cri *CompanyRepositoryImpl) AuthCompany(email string, password string) bool {
+	query := "select name from companies where email=$1 and password=$2"
+	var name string
+	row := cri.conn.QueryRow(query, email, password)
+	err := row.Scan(&name)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false
+		}
+	}
+	return true
+}
+
+// func (cri *CompanyRepositoryImpl) GetCompanyIDByEmail(email string) (int, error){
+// 	query := "select"
+// }

@@ -26,7 +26,7 @@ func NewAdminCommentHandler(T *template.Template, CS admin.CommentService) *Admi
 // AdminComments handle requests on route /admin/Comments
 func (ach *AdminCommentHandler) AdminComments(w http.ResponseWriter, r *http.Request) {
 	Comments, err := ach.CommentSrv.Comments()
-	
+
 	if err != nil {
 		panic(err)
 	}

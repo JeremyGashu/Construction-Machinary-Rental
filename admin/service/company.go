@@ -72,3 +72,9 @@ func (cs *CompanyServiceImpl) DeleteCompany(id int) error {
 	}
 	return nil
 }
+
+//AuthCompany -
+func (cs *CompanyServiceImpl) AuthCompany(email string, password string) bool {
+	c := cs.CompanyRepo.AuthCompany(email, password)
+	return c
+}

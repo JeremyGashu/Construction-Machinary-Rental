@@ -9,6 +9,8 @@ type CompanyRepository interface {
 	UpdateCompany(Company entity.Company) error
 	DeleteCompany(id int) error
 	StoreCompany(Company entity.Company) error
+	AuthCompany(email string, password string) bool
+	// GetCompanyIDByEmail(email string) (int, error)
 }
 
 //AdminRepository ..

@@ -14,6 +14,7 @@ import (
 	compser "github.com/ermiasgashu/Construction-Machinary-Rental/company/service"
 	handlers "github.com/ermiasgashu/Construction-Machinary-Rental/http/handler"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/http/handler/api"
+	"github.com/ermiasgashu/Construction-Machinary-Rental/middleware"
 	_ "github.com/lib/pq"
 )
 
@@ -74,12 +75,16 @@ func main() {
 	CompanyRepo := repository.NewCompanyRepositoryImpl(dbconn)
 	CompanyServ := service.NewCompanyServiceImpl(CompanyRepo)
 	adminCompanysHandler := handlers.NewAdminCompanyHandler(templ, CompanyServ)
+
 	apiAdminCompanysHandler := api.NewAdminCompanyHandler(CompanyServ)
 	router := httprouter.New()
 	//User
 	UserRepo := repository.NewUserRepositoryImpl(dbconn)
 	UserServ := service.NewUserServiceImpl(UserRepo)
 	adminUsersHandler := handlers.NewAdminUserHandler(templ, UserServ)
+
+	authHandler := handlers.NewCompanyAuthHandler(CompanyServ)
+
 	apiAdminUsersHandler := api.NewAdminUserHandler(UserServ)
 
 	materialRepo := comprep.NewMaterialRepository(dbconn)
@@ -93,9 +98,9 @@ func main() {
 	CommentServ := service.NewCommentServiceImpl(CommentRepo)
 	adminCommentsHandler := handlers.NewAdminCommentHandler(templ, CommentServ)
 
-	// fs := http.FileServer(http.Dir("../ui/assets"))
+	fs := http.FileServer(http.Dir("../ui/assets"))
 	router.ServeFiles("/assets/*filepath", http.Dir("../ui/assets"))
-	// http.Handle("/assets/", http.StripPrefix("/assets/", fs))
+	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 	router.GET("/", index)
 	router.GET("/login", login)
 	router.GET("/signinCompany", loginAs)
@@ -114,7 +119,7 @@ func main() {
 	//handle company
 	router.GET("/admin/company", adminCompanysHandler.AdminCompanys)
 	router.POST("/admin/company/new", adminCompanysHandler.AdminCompanysNew)
-	router.POST("/admin/company/update", adminCompanysHandler.AdminCompanysNew)
+	router.POST("/admin/company/update", adminCompanysHandler.AdminCompanysUpdate)
 	router.GET("/admin/company/update", adminCompanysHandler.AdminCompanysUpdate)
 	router.GET("/admin/company/delete", adminCompanysHandler.AdminCompanysDelete)
 	//handle user
@@ -122,6 +127,7 @@ func main() {
 	router.POST("/admin/user/new", adminUsersHandler.AdminUsersNew)
 	router.GET("/admin/user/new", adminUsersHandler.AdminUsersNew)
 	router.PUT("/admin/user/update", adminUsersHandler.AdminUsersUpdate)
+	router.GET("/admin/user/update", adminUsersHandler.AdminUsersUpdate)
 	router.GET("/admin/users/delete", adminUsersHandler.AdminUsersDelete)
 	//handle user
 	http.HandleFunc("/admin/comment", adminCommentsHandler.AdminComments)
@@ -137,10 +143,13 @@ func main() {
 	// http.HandleFunc("/v1/companies/secret", middleware.IsAuthorized(ap.Secret))
 
 	router.GET("/v1/companies/materials", hand.Materials)
-	router.GET("/v1/companies/materials/:material_id", hand.Material)
-	router.PUT("/v1/companies/materials/:id", hand.UpdateMaterial)
-	router.DELETE("/v1/companies/materials/delete/:material_id", hand.DeleteMaterial)
-	router.POST("/v1/companies/materials", hand.StoreMaterial)
+	router.GET("/v1/companies/materials/:material_id", middleware.CompanyLoginRequired(hand.Material))
+	router.PUT("/v1/companies/materials/:id", middleware.CompanyLoginRequired(hand.UpdateMaterial))
+	router.DELETE("/v1/companies/materials/delete/:material_id", middleware.CompanyLoginRequired(hand.DeleteMaterial))
+	router.POST("/v1/companies/materials", middleware.CompanyLoginRequired(hand.StoreMaterial))
+	router.POST("/v1/companies/login", authHandler.Login)
+	router.GET("/v1/companies/test", middleware.CompanyLoginRequired(authHandler.TestJWT))
+
 	//handle company api
 	router.GET("/v1/admin/company/:id", apiAdminCompanysHandler.GetSingleCompany)
 	router.GET("/v1/admin/company", apiAdminCompanysHandler.GetCompanys)
