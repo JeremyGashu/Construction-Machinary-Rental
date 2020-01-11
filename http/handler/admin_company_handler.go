@@ -8,6 +8,7 @@ import (
 
 	"github.com/ermiasgashu/Construction-Machinary-Rental/admin"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
+	"github.com/julienschmidt/httprouter"
 )
 
 // AdminCompanyHandler handles Admin handler admin requests
@@ -22,7 +23,7 @@ func NewAdminCompanyHandler(T *template.Template, CS admin.CompanyService) *Admi
 }
 
 // AdminCompanys handle requests on route /admin/Companys
-func (ach *AdminCompanyHandler) AdminCompanys(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminCompanyHandler) AdminCompanys(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	Companys, err := ach.CompanySrv.Companies()
 	if err != nil {
 		panic(err)
@@ -31,7 +32,7 @@ func (ach *AdminCompanyHandler) AdminCompanys(w http.ResponseWriter, r *http.Req
 }
 
 // AdminCompanysNew hanlde requests on route /admin/Companys/new
-func (ach *AdminCompanyHandler) AdminCompanysNew(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminCompanyHandler) AdminCompanysNew(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodPost {
 
@@ -68,7 +69,7 @@ func (ach *AdminCompanyHandler) AdminCompanysNew(w http.ResponseWriter, r *http.
 }
 
 // AdminCompanysUpdate handle requests on /admin/Companys/update
-func (ach *AdminCompanyHandler) AdminCompanysUpdate(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminCompanyHandler) AdminCompanysUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodGet {
 
@@ -126,7 +127,7 @@ func (ach *AdminCompanyHandler) AdminCompanysUpdate(w http.ResponseWriter, r *ht
 }
 
 // AdminCompanysDelete handle requests on route /admin/categories/delete
-func (ach *AdminCompanyHandler) AdminCompanysDelete(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminCompanyHandler) AdminCompanysDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodGet {
 		idRaw := r.URL.Query().Get("id")

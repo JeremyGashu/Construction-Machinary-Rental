@@ -9,6 +9,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/julienschmidt/httprouter"
+
 	"github.com/ermiasgashu/Construction-Machinary-Rental/admin"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 )
@@ -25,7 +27,7 @@ func NewAdminAdminHandler(T *template.Template, CS admin.AdminService) *AdminAdm
 }
 
 // AdminAdmins handle requests on route /admin/categories
-func (ach *AdminAdminHandler) AdminAdmins(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminAdminHandler) AdminAdmins(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	admins, err := ach.AdminSrv.Admins()
 	if err != nil {
 		panic(err)
@@ -34,7 +36,7 @@ func (ach *AdminAdminHandler) AdminAdmins(w http.ResponseWriter, r *http.Request
 }
 
 // AdminAdminsNew hanlde requests on route /admin/admins/new
-func (ach *AdminAdminHandler) AdminAdminsNew(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminAdminHandler) AdminAdminsNew(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodPost {
 
@@ -71,7 +73,7 @@ func (ach *AdminAdminHandler) AdminAdminsNew(w http.ResponseWriter, r *http.Requ
 }
 
 // AdminAdminsUpdate handle requests on /admin/categories/update
-func (ach *AdminAdminHandler) AdminAdminsUpdate(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminAdminHandler) AdminAdminsUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodGet {
 
@@ -88,6 +90,7 @@ func (ach *AdminAdminHandler) AdminAdminsUpdate(w http.ResponseWriter, r *http.R
 	} else if r.Method == http.MethodPost {
 
 		ctg := entity.Admin{}
+		ctg.Username = r.FormValue("username")
 		ctg.FirstName = r.FormValue("firstname")
 		ctg.LastName = r.FormValue("lastname")
 		ctg.Email = r.FormValue("email")
@@ -104,27 +107,27 @@ func (ach *AdminAdminHandler) AdminAdminsUpdate(w http.ResponseWriter, r *http.R
 
 			writeFile(&mf, ctg.ImagePath)
 
-			fmt.Println(ctg.ImagePath)
+			// fmt.Println(ctg.ImagePath)
 		} else {
 			ctg.ImagePath = r.FormValue("catimg")
 		}
-
+		fmt.Println(ctg)
 		err = ach.AdminSrv.UpdateAdmin(ctg)
 
 		if err != nil {
 			panic(err)
 		}
 
-		http.Redirect(w, r, "/admin", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/admins", http.StatusSeeOther)
 
 	} else {
-		http.Redirect(w, r, "/admin", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/admins", http.StatusSeeOther)
 	}
 
 }
 
 // AdminAdminsDelete handle requests on route /admin/categories/delete
-func (ach *AdminAdminHandler) AdminAdminsDelete(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminAdminHandler) AdminAdminsDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodGet {
 

@@ -103,15 +103,17 @@ func main() {
 	//handle admin
 	// router := httprouter.New()
 
-	http.HandleFunc("/admin/admins", adminAdminsHandler.AdminAdmins)
-	http.HandleFunc("/admin/admins/new", adminAdminsHandler.AdminAdminsNew)
-	http.HandleFunc("/admin/admins/update", adminAdminsHandler.AdminAdminsUpdate)
-	http.HandleFunc("/admin/admins/delete", adminAdminsHandler.AdminAdminsDelete)
+	router.GET("/admin/admins", adminAdminsHandler.AdminAdmins)
+	router.POST("/admin/admins/new", adminAdminsHandler.AdminAdminsNew)
+	router.POST("/admin/admins/update", adminAdminsHandler.AdminAdminsUpdate)
+	router.GET("/admin/admins/update", adminAdminsHandler.AdminAdminsUpdate)
+	router.GET("/admin/admins/delete", adminAdminsHandler.AdminAdminsDelete)
 	//handle company
-	http.HandleFunc("/admin/company", adminCompanysHandler.AdminCompanys)
-	http.HandleFunc("/admin/company/new", adminCompanysHandler.AdminCompanysNew)
-	http.HandleFunc("/admin/company/update", adminCompanysHandler.AdminCompanysUpdate)
-	http.HandleFunc("/admin/company/delete", adminCompanysHandler.AdminCompanysDelete)
+	router.GET("/admin/company", adminCompanysHandler.AdminCompanys)
+	router.POST("/admin/company/new", adminCompanysHandler.AdminCompanysNew)
+	router.POST("/admin/company/update", adminCompanysHandler.AdminCompanysNew)
+	router.GET("/admin/company/update", adminCompanysHandler.AdminCompanysUpdate)
+	router.GET("/admin/company/delete", adminCompanysHandler.AdminCompanysDelete)
 	//handle user
 	http.HandleFunc("/admin/user", adminUsersHandler.AdminUsers)
 	http.HandleFunc("/admin/user/new", adminUsersHandler.AdminUsersNew)
