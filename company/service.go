@@ -10,3 +10,10 @@ type MaterialService interface {
 	AddMaterial(material entity.Material) error
 	MaterialByCompanyOwner(id int) ([]entity.Material, error)
 }
+type CompanyService interface {
+	Companies() ([]entity.Company, error)
+	Company(id int) (entity.Company, error)
+	UpdateCompany(company entity.Company) error
+	DeleteCompany(id int) error
+	AddCompany(company entity.Company) error
+}
