@@ -1,15 +1,13 @@
 package service
 
 import (
-	"github.com/ermiasgashu/Construction-Machinary-Rental/company"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/material"
-	// "github.com/ermiasgashu/Construction-Machinary-Rental/material"
 )
 
 //MaterialService -
 type MaterialService struct {
-	repository company.MaterialRepository
+	repository material.MaterialRepository
 }
 
 //NewMaterialService -
