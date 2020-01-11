@@ -10,3 +10,10 @@ type MaterialRepository interface {
 	AddMaterial(material entity.Material) error
 	MaterialByCompanyOwner(id int) ([]entity.Material, error)
 }
+type CompanyRepository interface {
+	Companies() ([]entity.Company, error)
+	Company(id int) (entity.Company, error)
+	UpdateCompany(material entity.Company) error
+	DeleteCompany(id int) error
+	AddCompany(material entity.Company) error
+}
