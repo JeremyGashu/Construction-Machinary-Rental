@@ -5,7 +5,6 @@ import (
 	"errors"
 
 	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
-	
 )
 
 //MaterialRepository -
@@ -70,9 +69,9 @@ func (mr *MaterialRepository) DeleteMaterial(id int) error {
 
 //AddMaterial -
 func (mr *MaterialRepository) AddMaterial(material entity.Material) error {
-	query := "insert into materials(name, owner,priceperday, ondiscount, discount, onsale, imagepath) values($1,$2,$3,$4,$5,$6,$7)"
+	query := "insert into materials(name, priceperday, ondiscount, discount, onsale, imagepath) values($1,$2,$3,$4,$5,$6)"
 
-	_, err := mr.conn.Exec(query, material.Name, material.Owner, material.PricePerDay, material.OnDiscount, material.Discount, material.OnSale, material.ImagePath)
+	_, err := mr.conn.Exec(query, material.Name, material.PricePerDay, material.OnDiscount, material.Discount, material.OnSale, material.ImagePath)
 	if err != nil {
 		return err
 	}

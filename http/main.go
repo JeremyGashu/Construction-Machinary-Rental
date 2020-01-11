@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"html/template"
 	"net/http"
 
@@ -48,21 +47,18 @@ const (
 )
 
 func main() {
-
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
-	dbconn, err := sql.Open("postgres", psqlInfo)
+	dbconn, err := sql.Open("postgres", "postgres://postgres:ebsa@localhost/constructiondb?sslmode=disable")
 
 	if err != nil {
 		panic(err)
-	} //this i
+	}
+
 	defer dbconn.Close()
 
 	if err := dbconn.Ping(); err != nil {
 		panic(err)
 	}
+
 	//admin
 	AdminRepo := repository.NewAdminRepositoryImpl(dbconn)
 	AdminServ := service.NewAdminServiceImpl(AdminRepo)
@@ -84,6 +80,8 @@ func main() {
 	materialRepo := comprep.NewMaterialRepository(dbconn)
 	ser := compser.NewMaterialService(materialRepo)
 	hand := api.NewCompanyMaterialHandler(ser)
+
+	materialHandle := handlers.NewCompanyMaterialHandler(templ, ser)
 	// serv := api.NewCompanyMaterialHandler(materialSer)
 	// ap := api.NewCompanyUseCaseHander(*CompanyServ)
 	CommentRepo := repository.NewCommentRepositoryImpl(dbconn)
@@ -126,6 +124,10 @@ func main() {
 	http.HandleFunc("/admin/comment/update", adminCommentsHandler.AdminCommentsUpdate)
 	http.HandleFunc("/admin/comment/delete", adminCommentsHandler.AdminCommentsDelete)
 
+	http.HandleFunc("/company/material", materialHandle.CompanyMaterials)
+	http.HandleFunc("/company/material/new", materialHandle.CompanyMaterialsNew)
+	http.HandleFunc("/company/material/update", materialHandle.CompanyMaterialsUpdate)
+	http.HandleFunc("/company/material/delete", materialHandle.CompanyMaterialsDelete)
 	// http.HandleFunc("/v1/companies/login", ap.Login)
 	// http.HandleFunc("/v1/companies/secret", middleware.IsAuthorized(ap.Secret))
 
@@ -151,5 +153,5 @@ func main() {
 	router.PUT("/v1/admin/admins/:username", apiAdminAdminsHandler.PutAdmin)
 	router.POST("/v1/admin/admins", apiAdminAdminsHandler.PostAdmin)
 	router.DELETE("/v1/admin/admins/:username", apiAdminAdminsHandler.DeleteAdmin)
-	http.ListenAndServe(":8080", router)
+	http.ListenAndServe(":8080", nil)
 }
