@@ -2,12 +2,14 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/julienschmidt/httprouter"
 
 	"github.com/ermiasgashu/Construction-Machinary-Rental/company"
+	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 )
 
 //CompanyMaterialHandler -
@@ -51,7 +53,32 @@ func (ch *CompanyMaterialHandler) DeleteMaterial(w http.ResponseWriter, r *http.
 
 //StoreMaterial -
 func (ch *CompanyMaterialHandler) StoreMaterial(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	
+	l := r.ContentLength
+	body := make([]byte, l)
+	r.Body.Read(body)
+	material := &entity.Material{}
+
+	err := json.Unmarshal(body, material)
+
+	if err != nil {
+
+		fmt.Println(err)
+		w.Header().Set("Content-Type", "application/json")
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+	errs := ch.materials.AddMaterial(*material)
+
+	if errs != nil {
+		w.Header().Set("Content-Type", "application/json")
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	p := fmt.Sprintf("/v1/admin/Users/%s", material.Name)
+	w.Header().Set("Location", p)
+	w.WriteHeader(http.StatusCreated)
+	return
 }
 
 //Material -
