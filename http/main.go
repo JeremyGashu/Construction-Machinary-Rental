@@ -67,22 +67,25 @@ func main() {
 	AdminRepo := repository.NewAdminRepositoryImpl(dbconn)
 	AdminServ := service.NewAdminServiceImpl(AdminRepo)
 	adminAdminsHandler := handlers.NewAdminAdminHandler(templ, AdminServ)
+	apiAdminAdminsHandler := api.NewAdminAdminsHandler(AdminServ)
+
 	//company
 	CompanyRepo := repository.NewCompanyRepositoryImpl(dbconn)
 	CompanyServ := service.NewCompanyServiceImpl(CompanyRepo)
+	adminCompanysHandler := handlers.NewAdminCompanyHandler(templ, CompanyServ)
+	apiAdminCompanysHandler := api.NewAdminCompanyHandler(CompanyServ)
+	router := httprouter.New()
+	//User
+	UserRepo := repository.NewUserRepositoryImpl(dbconn)
+	UserServ := service.NewUserServiceImpl(UserRepo)
+	adminUsersHandler := handlers.NewAdminUserHandler(templ, UserServ)
+	apiAdminUsersHandler := api.NewAdminUserHandler(UserServ)
 
 	materialRepo := comprep.NewMaterialRepository(dbconn)
 	ser := compser.NewMaterialService(materialRepo)
 	hand := api.NewCompanyMaterialHandler(ser)
 	// serv := api.NewCompanyMaterialHandler(materialSer)
 	// ap := api.NewCompanyUseCaseHander(*CompanyServ)
-	adminCompanysHandler := handlers.NewAdminCompanyHandler(templ, CompanyServ)
-	//User
-	UserRepo := repository.NewUserRepositoryImpl(dbconn)
-	UserServ := service.NewUserServiceImpl(UserRepo)
-	adminUsersHandler := handlers.NewAdminUserHandler(templ, UserServ)
-
-	//Comment
 	CommentRepo := repository.NewCommentRepositoryImpl(dbconn)
 	CommentServ := service.NewCommentServiceImpl(CommentRepo)
 	adminCommentsHandler := handlers.NewAdminCommentHandler(templ, CommentServ)
@@ -97,6 +100,8 @@ func main() {
 	http.HandleFunc("/company", company)
 
 	//handle admin
+	// router := httprouter.New()
+
 	http.HandleFunc("/admin/admins", adminAdminsHandler.AdminAdmins)
 	http.HandleFunc("/admin/admins/new", adminAdminsHandler.AdminAdminsNew)
 	http.HandleFunc("/admin/admins/update", adminAdminsHandler.AdminAdminsUpdate)
@@ -119,10 +124,26 @@ func main() {
 
 	// http.HandleFunc("/v1/companies/login", ap.Login)
 	// http.HandleFunc("/v1/companies/secret", middleware.IsAuthorized(ap.Secret))
-	router := httprouter.New()
 
 	router.GET("/v1/companies/materials", hand.Materials)
 	router.DELETE("/v1/companies/materials/delete/:material_id", hand.DeleteMaterial)
-
+	//handle company api
+	router.GET("/v1/admin/company/:id", apiAdminCompanysHandler.GetSingleCompany)
+	router.GET("/v1/admin/company", apiAdminCompanysHandler.GetCompanys)
+	router.PUT("/v1/admin/company/:id", apiAdminCompanysHandler.PutCompany)
+	router.POST("/v1/admin/company", apiAdminCompanysHandler.PostCompany)
+	router.DELETE("/v1/admin/company/:id", apiAdminCompanysHandler.DeleteCompany)
+	//handle user api
+	router.GET("/v1/admin/user/:username", apiAdminUsersHandler.GetSingleUser)
+	router.GET("/v1/admin/user", apiAdminUsersHandler.GetUsers)
+	router.PUT("/v1/admin/user/:username", apiAdminUsersHandler.PutUser)
+	router.POST("/v1/admin/user", apiAdminUsersHandler.PostUser)
+	router.DELETE("/v1/admin/user/:username", apiAdminUsersHandler.DeleteUser)
+	//handle Admin api
+	router.GET("/v1/admin/admins/:username", apiAdminAdminsHandler.GetSingleAdmin)
+	router.GET("/v1/admin/admins", apiAdminAdminsHandler.GetAdmins)
+	router.PUT("/v1/admin/admins/:username", apiAdminAdminsHandler.PutAdmin)
+	router.POST("/v1/admin/admins", apiAdminAdminsHandler.PostAdmin)
+	router.DELETE("/v1/admin/admins/:username", apiAdminAdminsHandler.DeleteAdmin)
 	http.ListenAndServe(":8080", router)
 }
