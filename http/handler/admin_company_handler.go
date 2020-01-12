@@ -128,7 +128,6 @@ func (ach *AdminCompanyHandler) AdminCompanysUpdate(w http.ResponseWriter, r *ht
 
 // AdminCompanysDelete handle requests on route /admin/categories/delete
 func (ach *AdminCompanyHandler) AdminCompanysDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
 	if r.Method == http.MethodGet {
 		idRaw := r.URL.Query().Get("id")
 		id, err := strconv.Atoi(idRaw)
@@ -146,4 +145,29 @@ func (ach *AdminCompanyHandler) AdminCompanysDelete(w http.ResponseWriter, r *ht
 	}
 
 	http.Redirect(w, r, "/admin/company", http.StatusSeeOther)
+}
+
+//Unactivated -
+func (ach *AdminCompanyHandler) Unactivated(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	Companys, err := ach.CompanySrv.UnactivatedCompanies()
+	if err != nil {
+		panic(err)
+	}
+	ach.tmpl.ExecuteTemplate(w, "admin.company.unactivated.layout", Companys)
+}
+
+//Approve -
+func (ach *AdminCompanyHandler) Approve(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	raw := r.URL.Query().Get("id")
+	id, err := strconv.Atoi(raw)
+	if err != nil {
+		fmt.Print(err)
+		panic(err)
+	}
+	err = ach.CompanySrv.ApproveCompany(id)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	http.Redirect(w, r, "/admin/requests", http.StatusSeeOther)
 }

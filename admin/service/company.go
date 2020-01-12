@@ -78,3 +78,21 @@ func (cs *CompanyServiceImpl) AuthCompany(email string, password string) bool {
 	c := cs.CompanyRepo.AuthCompany(email, password)
 	return c
 }
+
+//UnactivatedCompanies -
+func (cs *CompanyServiceImpl) UnactivatedCompanies() ([]entity.Company, error) {
+	cps, err := cs.CompanyRepo.UnactivatedCompanies()
+	if err != nil {
+		return cps, err
+	}
+	return cps, nil
+}
+
+//ApproveCompany -
+func (cs *CompanyServiceImpl) ApproveCompany(id int) error {
+	err := cs.CompanyRepo.ApproveCompany(id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

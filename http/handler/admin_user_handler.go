@@ -41,6 +41,7 @@ func (ach *AdminUserHandler) AdminUsersNew(w http.ResponseWriter, r *http.Reques
 		ctg.FirstName = r.FormValue("firstname")
 		ctg.LastName = r.FormValue("lastname")
 		ctg.Email = r.FormValue("email")
+		ctg.Phone = r.FormValue("phone")
 		ctg.Password = r.FormValue("password")
 		ctg.DeliveryAddress = r.FormValue("daddress")
 		acc, errs := strconv.Atoi(r.FormValue("account"))

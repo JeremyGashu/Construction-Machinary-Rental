@@ -1,0 +1,49 @@
+{{define "admin.company.unactivated.layout"}}
+{{template "adminnav" .}}
+{{template "admin.company.unactivated.content" .}}
+{{template "footer" .}}
+{{end}}
+{{define "admin.company.unactivated.content"}}
+<div class="align-content-center">
+
+</div>
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 align-content-center">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2>Unactivated Campanies</h2>
+    </div>
+    <div class="pt-3 pb-2 mb-3">
+    </div>
+    <table class="table table-striped align-content-center">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Company Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Address</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Description</th>
+                <!-- <th scope="col">Password</th> -->
+                <th scope="col">Image</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range . }}
+            <tr>
+                <th scope="row"> {{ .CompanyID }} </th>
+                <td> {{ .Name }} </td>
+                <td> {{ .Email}} </td>
+                <td> {{ .Address }} </td>
+                <td> {{ .PhoneNo }} </td>
+                <td> {{ .Description }} </td>
+                <!-- <td> {{ .Password }} </td> -->
+                <td> <img src="/assets/img/{{ .ImagePath }}" width="70rem" height="70rem" /> </td>
+                <td> <a href="/admin/company/delete?id={{ .CompanyID }}">Delete</a> </td>
+                <td> <a href="/admin/company/approve?id={{ .CompanyID }}">Approve</a> </td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</main>
+{{end}}

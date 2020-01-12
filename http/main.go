@@ -71,12 +71,12 @@ func main() {
 	adminAdminsHandler := handlers.NewAdminAdminHandler(templ, AdminServ)
 	apiAdminAdminsHandler := api.NewAdminAdminsHandler(AdminServ)
 
-	//company
 	CompanyRepo := repository.NewCompanyRepositoryImpl(dbconn)
 	CompanyServ := service.NewCompanyServiceImpl(CompanyRepo)
 	adminCompanysHandler := handlers.NewAdminCompanyHandler(templ, CompanyServ)
-
 	apiAdminCompanysHandler := api.NewAdminCompanyHandler(CompanyServ)
+
+	//company
 	router := httprouter.New()
 	//User
 	UserRepo := repository.NewUserRepositoryImpl(dbconn)
@@ -91,12 +91,15 @@ func main() {
 	ser := compser.NewMaterialService(materialRepo)
 	hand := api.NewCompanyMaterialHandler(ser)
 
-	materialHandle := handlers.NewCompanyMaterialHandler(templ, ser)
+	// materialHandle := handlers.NewCompanyMaterialHandler(templ, ser)
 	// serv := api.NewCompanyMaterialHandler(materialSer)
 	// ap := api.NewCompanyUseCaseHander(*CompanyServ)
 	CommentRepo := repository.NewCommentRepositoryImpl(dbconn)
 	CommentServ := service.NewCommentServiceImpl(CommentRepo)
 	adminCommentsHandler := handlers.NewAdminCommentHandler(templ, CommentServ)
+
+	userSignupHandler := handlers.NewUserSignupHandler(UserServ, templ)
+	cpnySignupHandler := handlers.NewCompanySignUpHandler(CompanyServ, templ)
 
 	fs := http.FileServer(http.Dir("../ui/assets"))
 	router.ServeFiles("/assets/*filepath", http.Dir("../ui/assets"))
@@ -108,39 +111,37 @@ func main() {
 	router.GET("/user", userr)
 	router.GET("/company", company)
 
-	//handle admin
-	// router := httprouter.New()
+	router.POST("/login", userSignupHandler.SignupHandler)
+	router.POST("/signinCompany", cpnySignupHandler.SignupHandler)
 
 	router.GET("/admin/admins", adminAdminsHandler.AdminAdmins)
 	router.POST("/admin/admins/new", adminAdminsHandler.AdminAdminsNew)
-	router.POST("/admin/admins/update", adminAdminsHandler.AdminAdminsUpdate)
-	router.GET("/admin/admins/update", adminAdminsHandler.AdminAdminsUpdate)
+	router.GET("/admin/admins/new", adminAdminsHandler.AdminAdminsNew)
 	router.GET("/admin/admins/delete", adminAdminsHandler.AdminAdminsDelete)
 	//handle company
 	router.GET("/admin/company", adminCompanysHandler.AdminCompanys)
 	router.POST("/admin/company/new", adminCompanysHandler.AdminCompanysNew)
-	router.POST("/admin/company/update", adminCompanysHandler.AdminCompanysUpdate)
-	router.GET("/admin/company/update", adminCompanysHandler.AdminCompanysUpdate)
+	router.GET("/admin/company/new", adminCompanysHandler.AdminCompanysNew)
+	router.GET("/admin/requests", adminCompanysHandler.Unactivated)
+	router.GET("/admin/company/approve", adminCompanysHandler.Approve)
+
 	router.GET("/admin/company/delete", adminCompanysHandler.AdminCompanysDelete)
 	//handle user
 	router.GET("/admin/user", adminUsersHandler.AdminUsers)
 	router.POST("/admin/user/new", adminUsersHandler.AdminUsersNew)
 	router.GET("/admin/user/new", adminUsersHandler.AdminUsersNew)
-	router.PUT("/admin/user/update", adminUsersHandler.AdminUsersUpdate)
-	router.GET("/admin/user/update", adminUsersHandler.AdminUsersUpdate)
+
 	router.GET("/admin/users/delete", adminUsersHandler.AdminUsersDelete)
 	//handle user
-	http.HandleFunc("/admin/comment", adminCommentsHandler.AdminComments)
-	http.HandleFunc("/admin/comment/new", adminCommentsHandler.AdminCommentsNew)
-	http.HandleFunc("/admin/comment/update", adminCommentsHandler.AdminCommentsUpdate)
-	http.HandleFunc("/admin/comment/delete", adminCommentsHandler.AdminCommentsDelete)
+	router.GET("/admin/comment", adminCommentsHandler.AdminComments)
+	router.GET("/admin/comment/new", adminCommentsHandler.AdminCommentsNew)
+	router.POST("/admin/comment/new", adminCommentsHandler.AdminCommentsNew)
+	router.GET("/admin/comment/delete", adminCommentsHandler.AdminCommentsDelete)
 
-	http.HandleFunc("/company/material", materialHandle.CompanyMaterials)
-	http.HandleFunc("/company/material/new", materialHandle.CompanyMaterialsNew)
-	http.HandleFunc("/company/material/update", materialHandle.CompanyMaterialsUpdate)
-	http.HandleFunc("/company/material/delete", materialHandle.CompanyMaterialsDelete)
-	// http.HandleFunc("/v1/companies/login", ap.Login)
-	// http.HandleFunc("/v1/companies/secret", middleware.IsAuthorized(ap.Secret))
+	// http.HandleFunc("/company/material", materialHandle.CompanyMaterials)
+	// http.HandleFunc("/company/material/new", materialHandle.CompanyMaterialsNew)
+	// http.HandleFunc("/company/material/update", materialHandle.CompanyMaterialsUpdate)
+	// http.HandleFunc("/company/material/delete", materialHandle.CompanyMaterialsDelete)
 
 	router.GET("/v1/companies/materials", hand.Materials)
 	router.GET("/v1/companies/materials/:material_id", middleware.CompanyLoginRequired(hand.Material))
@@ -168,5 +169,6 @@ func main() {
 	router.PUT("/v1/admin/admins/:username", apiAdminAdminsHandler.PutAdmin)
 	router.POST("/v1/admin/admins", apiAdminAdminsHandler.PostAdmin)
 	router.DELETE("/v1/admin/admins/:username", apiAdminAdminsHandler.DeleteAdmin)
+
 	http.ListenAndServe(":8080", router)
 }

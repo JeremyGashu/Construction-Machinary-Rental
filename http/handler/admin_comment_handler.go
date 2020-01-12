@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/julienschmidt/httprouter"
+
 	"time"
 
 	"github.com/ermiasgashu/Construction-Machinary-Rental/admin"
@@ -24,7 +26,7 @@ func NewAdminCommentHandler(T *template.Template, CS admin.CommentService) *Admi
 }
 
 // AdminComments handle requests on route /admin/Comments
-func (ach *AdminCommentHandler) AdminComments(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminCommentHandler) AdminComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	Comments, err := ach.CommentSrv.Comments()
 
 	if err != nil {
@@ -42,7 +44,7 @@ func (ach *AdminCommentHandler) AdminComments(w http.ResponseWriter, r *http.Req
 // }
 
 // AdminCommentsNew hanlde requests on route /admin/Comments/new
-func (ach *AdminCommentHandler) AdminCommentsNew(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminCommentHandler) AdminCommentsNew(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodPost {
 
@@ -72,7 +74,7 @@ func (ach *AdminCommentHandler) AdminCommentsNew(w http.ResponseWriter, r *http.
 }
 
 // AdminCommentsUpdate handle requests on /admin/Comments/update
-func (ach *AdminCommentHandler) AdminCommentsUpdate(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminCommentHandler) AdminCommentsUpdate(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodGet {
 
@@ -117,7 +119,7 @@ func (ach *AdminCommentHandler) AdminCommentsUpdate(w http.ResponseWriter, r *ht
 }
 
 // AdminCommentsDelete handle requests on route /admin/categories/delete
-func (ach *AdminCommentHandler) AdminCommentsDelete(w http.ResponseWriter, r *http.Request) {
+func (ach *AdminCommentHandler) AdminCommentsDelete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodGet {
 		idRaw := r.URL.Query().Get("id")

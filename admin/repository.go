@@ -10,6 +10,8 @@ type CompanyRepository interface {
 	DeleteCompany(id int) error
 	StoreCompany(Company entity.Company) error
 	AuthCompany(email string, password string) bool
+	UnactivatedCompanies() ([]entity.Company, error)
+	ApproveCompany(id int) error
 	// GetCompanyIDByEmail(email string) (int, error)
 }
 

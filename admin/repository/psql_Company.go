@@ -20,7 +20,7 @@ func NewCompanyRepositoryImpl(Conn *sql.DB) *CompanyRepositoryImpl {
 // Companies returns all cateogories from the database
 func (cri *CompanyRepositoryImpl) Companies() ([]entity.Company, error) {
 
-	rows, err := cri.conn.Query("SELECT * FROM companies")
+	rows, err := cri.conn.Query("SELECT * FROM companies where activated=true")
 	if err != nil {
 		return nil, errors.New("Could not query the database")
 	}
@@ -101,6 +101,39 @@ func (cri *CompanyRepositoryImpl) AuthCompany(email string, password string) boo
 		}
 	}
 	return true
+}
+
+//UnactivatedCompanies -
+func (cri *CompanyRepositoryImpl) UnactivatedCompanies() ([]entity.Company, error) {
+	rows, err := cri.conn.Query("SELECT * FROM companies where activated=false")
+	if err != nil {
+		return nil, errors.New("Could not query the database")
+	}
+	defer rows.Close()
+
+	ctgs := []entity.Company{}
+
+	for rows.Next() {
+		Company := entity.Company{}
+		err = rows.Scan(&Company.CompanyID, &Company.Name, &Company.Email, &Company.Address, &Company.PhoneNo, &Company.Description, &Company.Password, &Company.ImagePath, &Company.Rating, &Company.Account, &Company.Activated)
+		if err != nil {
+			return nil, err
+		}
+		ctgs = append(ctgs, Company)
+	}
+
+	return ctgs, nil
+}
+
+//ApproveCompany -
+func (cri *CompanyRepositoryImpl) ApproveCompany(id int) error {
+	query := "update companies set activated=true where id=$1"
+	_, err := cri.conn.Exec(query, id)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
 
 // func (cri *CompanyRepositoryImpl) GetCompanyIDByEmail(email string) (int, error){
