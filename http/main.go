@@ -101,9 +101,10 @@ func main() {
 	userSignupHandler := handlers.NewUserSignupHandler(UserServ, templ)
 	cpnySignupHandler := handlers.NewCompanySignUpHandler(CompanyServ, templ)
 
-	fs := http.FileServer(http.Dir("../ui/assets"))
+	//THIS WILL BE CLASSIFIED AS CLIENT AND SERVER FOR LATER US
+	// fs := http.FileServer(http.Dir("../ui/assets"))
 	router.ServeFiles("/assets/*filepath", http.Dir("../ui/assets"))
-	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
+	// http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 	router.GET("/", index)
 	router.GET("/login", login)
 	router.GET("/signinCompany", loginAs)
