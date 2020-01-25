@@ -38,12 +38,9 @@ func (ush *UserSignupHandler) SignupHandler(w http.ResponseWriter, r *http.Reque
 		if err != nil {
 			panic(err)
 		}
-
 		http.Redirect(w, r, "/user", http.StatusSeeOther)
-
 	} else {
 
 		ush.tmpl.ExecuteTemplate(w, "login.layout", nil)
-
 	}
 }

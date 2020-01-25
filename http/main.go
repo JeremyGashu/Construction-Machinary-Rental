@@ -108,12 +108,12 @@ func main() {
 	router.GET("/", index)
 	router.GET("/login", login)
 	router.GET("/signinCompany", loginAs)
-	router.GET("/admin", admin)
-	router.GET("/user", userr)
-	router.GET("/company", company)
+	router.GET("/admin", admin)     //Signing in as a company is a must to access this page
+	router.GET("/user", userr)      //Loggin ing is must to access this page
+	router.GET("/company", company) // company login is essential USE MIDDLE WARE
 
-	router.POST("/login", userSignupHandler.SignupHandler)
-	router.POST("/signinCompany", cpnySignupHandler.SignupHandler)
+	router.POST("/user/register", userSignupHandler.SignupHandler)
+	router.POST("/companies/register", cpnySignupHandler.SignupHandler)
 
 	router.GET("/admin/admins", adminAdminsHandler.AdminAdmins)
 	router.POST("/admin/admins/new", adminAdminsHandler.AdminAdminsNew)
@@ -150,7 +150,7 @@ func main() {
 	router.DELETE("/v1/companies/materials/delete/:material_id", middleware.CompanyLoginRequired(hand.DeleteMaterial))
 	router.POST("/v1/companies/materials", middleware.CompanyLoginRequired(hand.StoreMaterial))
 	router.POST("/v1/companies/login", authHandler.Login)
-	router.GET("/v1/companies/test", middleware.CompanyLoginRequired(authHandler.TestJWT))
+	// router.GET("/v1/companies/test", middleware.CompanyLoginRequired(authHandler.TestJWT))
 
 	//handle company api
 	router.GET("/v1/admin/company/:id", apiAdminCompanysHandler.GetSingleCompany)

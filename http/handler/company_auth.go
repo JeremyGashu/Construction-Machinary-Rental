@@ -29,7 +29,7 @@ func NewCompanyAuthHandler(cmp admin.CompanyService) *CompanyAuthHandler {
 }
 
 //Login -
-func (cah *CompanyAuthHandler) Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (cah *CompanyAuthHandler) Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) { //for the api
 	l := r.ContentLength
 	body := make([]byte, l)
 	r.Body.Read(body)
@@ -62,7 +62,7 @@ func (cah *CompanyAuthHandler) Login(w http.ResponseWriter, r *http.Request, ps 
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte("{\"Token:\"" + tokenStirng + "}"))
+	w.Write([]byte("{\"Token:\"" + tokenStirng + "}")) //set the token as cookie
 	// http.Error(w, http.StatusText(http.StatusAccepted), http.StatusAccepted)
 
 	// fmt.Println(tokenStirng)
