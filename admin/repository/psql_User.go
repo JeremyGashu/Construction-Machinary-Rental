@@ -87,3 +87,18 @@ func (cri *UserRepositoryImpl) StoreUser(c entity.User) error {
 
 	return nil
 }
+
+//AuthUser -
+func (cri *UserRepositoryImpl) AuthUser(username string, password string) bool {
+	query := "select username from users where username=$1 and password=$2"
+	var name string
+	row := cri.conn.QueryRow(query, username, password)
+	err := row.Scan(&name)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false
+		}
+	}
+	return true
+}

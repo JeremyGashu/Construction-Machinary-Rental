@@ -72,3 +72,9 @@ func (cs *UserServiceImpl) DeleteUser(id string) error {
 	}
 	return nil
 }
+
+//AuthUser -
+func (cs *UserServiceImpl) AuthUser(username string, password string) bool {
+	c := cs.UserRepo.AuthUser(username, password)
+	return c
+}

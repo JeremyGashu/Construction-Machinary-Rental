@@ -36,7 +36,6 @@ func userr(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	templ.ExecuteTemplate(w, "user.layout", nil)
 }
 func company(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
 	templ.ExecuteTemplate(w, "company.layout", nil)
 }
 
@@ -85,11 +84,14 @@ func main() {
 
 	authHandler := handlers.NewCompanyAuthHandler(CompanyServ)
 
+	allAuthHandler := handlers.NewAuthHander(CompanyServ, UserServ)
+
 	apiAdminUsersHandler := api.NewAdminUserHandler(UserServ)
 
 	materialRepo := comprep.NewMaterialRepository(dbconn)
 	ser := compser.NewMaterialService(materialRepo)
 	hand := api.NewCompanyMaterialHandler(ser)
+	userMaterialHandler := handlers.NewUserMaterialHandler(ser, templ)
 
 	// materialHandle := handlers.NewCompanyMaterialHandler(templ, ser)
 	// serv := api.NewCompanyMaterialHandler(materialSer)
@@ -106,14 +108,19 @@ func main() {
 	router.ServeFiles("/assets/*filepath", http.Dir("../ui/assets"))
 	// http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 	router.GET("/", index)
-	router.GET("/login", login)
-	router.GET("/signinCompany", loginAs)
-	router.GET("/admin", admin)     //Signing in as a company is a must to access this page
-	router.GET("/user", userr)      //Loggin ing is must to access this page
-	router.GET("/company", company) // company login is essential USE MIDDLE WARE
+	router.POST("/login", allAuthHandler.Login)
+	router.GET("/logout", allAuthHandler.Logout)
 
-	router.POST("/user/register", userSignupHandler.SignupHandler)
+	router.GET("/company/register", loginAs)
+
+	router.GET("/admin", admin)                                                      //Signing in as a company is a must to access this page
+	router.GET("/user", middleware.UserLoginRequired(userMaterialHandler.Materials)) //Loggin ing is must to access this page
+
+	router.GET("/company", middleware.CompaniesLoginReequired(company)) // company login is essential USE MIDDLE WARE
 	router.POST("/companies/register", cpnySignupHandler.SignupHandler)
+
+	router.GET("/user/register", login)
+	router.POST("/user/register", userSignupHandler.SignupHandler)
 
 	router.GET("/admin/admins", adminAdminsHandler.AdminAdmins)
 	router.POST("/admin/admins/new", adminAdminsHandler.AdminAdminsNew)

@@ -31,6 +31,7 @@ type UserRepository interface {
 	UpdateUser(User entity.User) error
 	DeleteUser(uname string) error
 	StoreUser(User entity.User) error
+	AuthUser(username string, password string) bool
 }
 
 //CommentRepository ..

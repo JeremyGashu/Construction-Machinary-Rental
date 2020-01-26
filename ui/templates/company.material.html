@@ -13,37 +13,34 @@
         <h2>Menu material</h2>
     </div>
     <div class="pt-3 pb-2 mb-3">
-        <a class="btn btn-primary btn-lg" href="/company/material/new" role="button">New Material</a>
+        <a class="btn blue-grey darken-3" href="/company/material/new" role="button">Add Material</a>
     </div>
-    <table class="table table-striped align-content-center">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Material Name</th>
-                <th scope="col">Price Per Day</th>
-                <th scope="col">OnDiscount</th>
-                <th scope="col">Discount</th>
-                <th scope="col">Onsale</th>
-                <th scope="col">Image</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            {{ range . }}
-            <tr>
-                <th scope="row"> {{ .ID }} </th>
-                <td> {{ .Name }} </td>
-                <td> {{ .PricePerDay }} </td>
-                <td> {{ .OnDiscount }} </td>
-                <td> {{ .Discount }} </td>
-                <td> {{ .OnSale }} </td>
-                <td> <img src="/assets/img/{{ .ImagePath }}" width="70rem" height="70rem" /> </td>
-                <td> <a href="/company/material/delete?id={{ .ID }}">Delete</a> </td>
-                <td> <a href="/company/material/update?id={{ .ID }}">Edit</a> </td>
-            </tr>
-            {{ end }}
-        </tbody>
-    </table>
-</main>
-{{end}}
+
+    <br>
+    <br>
+    <br>
+    <div class="row">
+        {{ range . }}
+        <div class="col s12 m3">
+            <div class="card">
+                <div class="card-image">
+                    <img src="/assets/img/back.jpg" width="12px">
+                    <span class="card-title black-text">{{ .Name }}</span>
+                    <a href="/company/material/update?id={{ .ID }}"
+                        class="btn-floating halfway-fab waves-effect waves-light blue-grey darken-3"><i
+                            class="material-icons">edit</i></a>
+                </div>
+                <div class="card-content">
+                    <p>ID :{{ .ID }}</p>
+                    <br>
+                    <p>Name :{{ .Name }}</p>
+                    <br>
+                    <p>Price :{{ .PricePerDay }}</p>
+                </div>
+                <a href="/company/material/delete?id={{ .ID }}"><i class="material-icons right-align">delete</i></a>
+            </div>
+
+        </div>
+        {{end}}
+    </div>
+    {{end}}
