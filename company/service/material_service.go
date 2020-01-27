@@ -70,3 +70,30 @@ func (ms *MaterialService) MaterialByCompanyOwner(id int) ([]entity.Material, er
 	}
 	return materials, nil
 }
+
+//GetOwner -
+func (ms *MaterialService) GetOwner(id int) (entity.Company, error) {
+	comp, err := ms.repository.GetOwner(id)
+	if err != nil {
+		return comp, err
+	}
+	return comp, nil
+}
+
+//RentMaterial -
+func (ms *MaterialService) RentMaterial(rentInfo entity.RentInformation) error {
+	err := ms.RentMaterial(rentInfo)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//MaterialSearch ..
+func (ms *MaterialService) MaterialSearch(name string) ([]entity.Material, error) {
+	materials, err := ms.repository.MaterialSearch(name)
+	if err != nil {
+		return materials, err
+	}
+	return materials, nil
+}

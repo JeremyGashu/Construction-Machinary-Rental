@@ -8,6 +8,7 @@ import (
 
 	"github.com/ermiasgashu/Construction-Machinary-Rental/company"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
+	"github.com/julienschmidt/httprouter"
 )
 
 // CompanyMaterialHandler handles Company handler Company requests
@@ -157,4 +158,47 @@ func (ach *CompanyMaterialHandler) CompanyMaterialsDelete(w http.ResponseWriter,
 	}
 
 	http.Redirect(w, r, "/company/material", http.StatusSeeOther)
+}
+
+//MaterialSearch handle requests on route /Company/categories/delete
+func (ach *CompanyMaterialHandler) MaterialSearch(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	ctg := entity.Material{}
+	a := ctg.Name
+
+	if r.Method == http.MethodPost {
+		a = r.FormValue("search")
+		material, err := ach.MaterialSrv.MaterialSearch(a)
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
+		ach.tmpl.ExecuteTemplate(w, "user.search.layout", material)
+
+	} else {
+
+		ach.tmpl.ExecuteTemplate(w, "user", nil)
+
+	}
+}
+
+//IndexMaterialSearch handle requests on route /Company/categories/delete
+func (ach *CompanyMaterialHandler) IndexMaterialSearch(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	ctg := entity.Material{}
+	a := ctg.Name
+
+	if r.Method == http.MethodPost {
+		a = r.FormValue("search")
+		material, err := ach.MaterialSrv.MaterialSearch(a)
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
+		ach.tmpl.ExecuteTemplate(w, "index.layout", material)
+
+	} else {
+		ach.tmpl.ExecuteTemplate(w, "index.layout", nil)
+
+	}
 }

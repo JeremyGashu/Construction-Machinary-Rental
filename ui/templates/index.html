@@ -1,7 +1,7 @@
 {{define "index.layout"}}
-{{template "navbar"}}
-{{template "index.content"}}
-{{template "footer"}}
+{{template "navbar" .}}
+{{template "index.content" .}}
+{{template "footer" .}}
 {{end}}
 {{define "index.content"}}
 <!--section slider-->
@@ -38,7 +38,7 @@
     </ul>
 </section>
 <!--section:search-->
-<section id="search" class="section section-search grey darken-4 white-text center scrollspy">
+<!-- <section id="search" class="section section-search grey darken-4 white-text center scrollspy">
     <div class="container">
         <div class="row">
             <div class="col s12">
@@ -48,6 +48,49 @@
                 </div>
             </div>
         </div>
+    </div>
+</section> -->
+<section id="searchx" class="grey darken-4 white-text center scrollspy">
+    <div class="container" style="height: auto;">
+        <div class="row">
+            <form action="/" method="post">
+                <div class="col s12">
+                    <h3>Search For Tool</h3>
+                    <div class="input-field">
+                        <input type="text" name="search" id="search" placeholder="search:Tool Name" autocomplete="off"
+                            class="white grey-text autocomplete-content center">
+                    </div>
+                    <div class="input-field">
+                        <input type="submit" value="search" class="blue-grey darken-3 btn btn-small">
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="row blue-grey-text" id="result">
+        {{ range . }}
+        <div class="col s12 m2">
+            <div class="card">
+                <div class="card-image">
+                    <img src="/assets/img/yellow_hat.jpg" width="12px">
+                    <span class="card-title yellow-text">{{ .Name }}</span>
+                    <a href="/login" class="btn-floating halfway-fab waves-effect waves-light blue-grey darken-3"><i
+                            class="material-icons">add</i></a>
+                </div>
+                <div class="card-content">
+                    <p>ID :{{ .ID }}</p>
+                    <br>
+                    <p>Name :{{ .Name }}</p>
+                    <br>
+                    <p>Price :{{ .PricePerDay }}</p>
+                </div>
+            </div>
+
+        </div>
+        {{end}}
+
     </div>
 </section>
 <section class="section section-icon grey lighten-2 center">

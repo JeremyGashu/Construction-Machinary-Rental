@@ -46,7 +46,7 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request, ps httprout
 			coo := http.Cookie{
 				Name:    "auth-information",
 				Value:   token,
-				Expires: time.Now().Add(time.Minute * 30),
+				Expires: time.Now().Add(time.Hour * 2),
 			}
 			http.SetCookie(w, &coo)
 			// w.Header().Add("authorization", token)
@@ -66,7 +66,7 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request, ps httprout
 			coo := http.Cookie{
 				Name:    "auth-information",
 				Value:   token,
-				Expires: time.Now().Add(time.Minute * 30),
+				Expires: time.Now().Add(time.Hour * 2),
 			} //token saved as cookie in jwt foormat which is more secured
 			http.SetCookie(w, &coo)
 

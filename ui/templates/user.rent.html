@@ -1,0 +1,54 @@
+{{define "user.rent.layout"}}
+{{template "usernav" .}}
+{{template "user.rent.content" .}}
+{{template "footer" .}}
+{{end}}
+{{define "user.rent.content"}}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+
+    <div class="container">
+            <div class="col s12 m5 l5">
+                    <div class="card">
+                        <div class="card-image">
+                            <img src="/assets/img/yellow_hat.jpg">
+                             
+                        </div>
+                        <div class="card-content">
+                                <h4>Material Informations</h4>
+                                    <p class="text-accent-3">Material Name :{{ .MaterialName }}</p>
+                                    <p>Price Per Day :{{ .PricePerDay }}ETB</p>
+
+                                    <h4>Information About {{ .CompanyName }} PLC</h4>
+                                        <p>Description: {{ .CompanyDescription }}</p>
+                                        <p>Email: {{ .CompanyEmail }}</p>
+                                        <p>Phone: {{ .CompanyPhone }}</p>
+                                        <p>Address: {{ .CompanyAddress }}</p>
+                                        <p>Rating :{{ .ComppanyRating }}</p>                
+                        </div>
+                    </div>
+                </div>
+        <form class="col s14 white-text" method="POST" action="/user/rent">
+            <div class="row">
+                <div class="input-field">
+                    <input name="returnDate" id="returnDate" type="date" class="validate" required>
+                </div>
+
+                <div class="input-field">
+                        <input name="materialID" type="hidden" value="{{ .MaterialID }}">
+
+                    </div>
+                    <div class="input-field">
+                            <input name="companyID" type="hidden" value="{{ .CompanyID }}">
+                        </div>
+                    
+            </div>
+            <button type="submit" class="waves-effect waves-light btn right hoverable grey darken-4"><i
+                    class="large material-icons right">shopping_cart</i>Rent</button>
+        </form>
+
+    </div>
+</main>
+
+{{end}}

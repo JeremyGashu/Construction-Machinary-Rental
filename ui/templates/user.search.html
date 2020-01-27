@@ -1,0 +1,33 @@
+{{define "user.search.layout"}}
+{{template "usernav" .}}
+{{template "user.search.content" .}}
+{{template "footer" .}}
+{{end}}
+{{define "user.search.content"}}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h4>Search Result </h4>
+</div>
+<div class="row ">
+    {{ range . }}
+    <div class="col s12 m3">
+        <div class="card">
+            <div class="card-image">
+                <img src="/assets/img/yellow_hat.jpg" width="12px">
+                <span class="card-title yellow-text">{{ .Name }}</span>
+                <a href="" class="btn-floating halfway-fab waves-effect waves-light blue-grey darken-3"><i
+                        class="material-icons">add</i></a>
+            </div>
+            <div class="card-content">
+                <p>ID :{{ .ID }}</p>
+                <br>
+                <p>Name :{{ .Name }}</p>
+                <br>
+                <p>Price :{{ .PricePerDay }}</p>
+            </div>
+        </div>
+
+    </div>
+    {{end}}
+
+</div>
+{{end}}

@@ -58,3 +58,11 @@ create table materials(
     onsale boolean default false,
     imagepath text default 'defaultmaterial.jpg'
 );
+
+create table materials_rented(
+    material_id int references materials(id) on delete CASCADE,
+    company_id int REFERENCES companies(id) on DELETE CASCADE,
+    rent_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    due_date DATE NOT NULL,
+    transactionMade NUMERIC NOT NULL
+);

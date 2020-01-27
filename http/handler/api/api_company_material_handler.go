@@ -150,3 +150,16 @@ func (ch *CompanyMaterialHandler) UpdateMaterial(w http.ResponseWriter, r *http.
 	w.Write(output)
 	return
 }
+
+//SearchMaterial -
+func (ch *CompanyMaterialHandler) SearchMaterial(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	name := ps.ByName("name")
+
+	materials, err := ch.materials.MaterialSearch(name)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(err.Error()))
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(materials)
+}

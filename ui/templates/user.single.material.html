@@ -1,0 +1,52 @@
+{{define "user.single.material.layout"}}
+{{template "usernav" .}}
+{{template "user.single.material.content" .}}
+{{template "footer" .}}
+{{end}}
+{{define "user.single.material.content"}}
+<div class="row ">
+    <div class="col s12 m5 l5">
+        <div class="card">
+            <div class="card-image">
+                <img src="/assets/img/yellow_hat.jpg">
+                 
+            </div>
+            <div class="card-content">
+                
+                        <p class="text-accent-3">Material Name :{{ .MaterialName }}</p>
+                        <p>Price Per Day :{{ .PricePerDay }}ETB</p>
+                        <p>Owner Company Name:<a class="modal-trigger" href="#modal1">{{ .CompanyName }}</a></p>
+
+                        <a href="/user/rent/{{ .MaterialID }}" style="margin-top: 10px;" class="waves-effect waves-light btn-large">Rent</a>
+                        {{if .OnSale}}
+                        <a style="margin-top: 10px;" class="waves-effect waves-light btn-large">Buy</a>
+                        {{end}}
+                        
+
+                        <!-- Modal Trigger -->
+
+                        <!-- Modal Structure -->
+                        <div id="modal1" class="modal">
+                            <div class="modal-content">
+                                    <img src="/assets/img/yellow_hat.jpg" width="300px"> <!--imagepath-->
+                            <h4>Company Name {{ .CompanyName }} PLC</h4>
+                            <p>Description: {{ .CompanyDescription }}</p>
+                            <p>Email: {{ .CompanyEmail }}</p>
+                            <p>Phone: {{ .CompanyPhone }}</p>
+                            <p>Address: {{ .CompanyAddress }}</p>
+                            <p>Rating :{{ .ComppanyRating }}</p>
+                            
+
+                            </div>
+                            <div class="modal-footer">
+                            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+                            </div>
+                        </div>
+                        
+                        
+            </div>
+        </div>
+
+    </div>
+</div>
+{{end}}

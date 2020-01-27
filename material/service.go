@@ -8,5 +8,9 @@ type MaterialService interface {
 	UpdateMaterial(material entity.Material) error
 	DeleteMaterial(id int) error
 	AddMaterial(material entity.Material) error
+	GetOwner(id int) (entity.Company, error)
 	MaterialByCompanyOwner(id int) ([]entity.Material, error)
+	RentMaterial(rentInfo entity.RentInformation) error
+	MaterialSearch(name string) ([]entity.Material, error)
+
 }

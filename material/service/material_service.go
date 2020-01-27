@@ -68,3 +68,10 @@ func (ms *MaterialService) MaterialByCompanyOwner(id int) ([]entity.Material, er
 	}
 	return materials, nil
 }
+func (ms *MaterialService) RentMaterial(rentInfo entity.RentInformation) error {
+	err := ms.RentMaterial(rentInfo)
+	if err != nil {
+		return err
+	}
+	return nil
+}

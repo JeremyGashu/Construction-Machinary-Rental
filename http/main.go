@@ -91,6 +91,7 @@ func main() {
 	materialRepo := comprep.NewMaterialRepository(dbconn)
 	ser := compser.NewMaterialService(materialRepo)
 	hand := api.NewCompanyMaterialHandler(ser)
+	handlol := handlers.NewCompanyMaterialHandler(templ, ser)
 	userMaterialHandler := handlers.NewUserMaterialHandler(ser, templ)
 
 	// materialHandle := handlers.NewCompanyMaterialHandler(templ, ser)
@@ -107,14 +108,24 @@ func main() {
 	// fs := http.FileServer(http.Dir("../ui/assets"))
 	router.ServeFiles("/assets/*filepath", http.Dir("../ui/assets"))
 	// http.Handle("/assets/", http.StripPrefix("/assets/", fs))
-	router.GET("/", index)
+	//router.GET("/", index)
 	router.POST("/login", allAuthHandler.Login)
 	router.GET("/logout", allAuthHandler.Logout)
+
+	router.HEAD("/", index)
+	router.GET("/", handlol.IndexMaterialSearch)
+	router.POST("/", handlol.IndexMaterialSearch)
+	router.GET("/user/search", handlol.MaterialSearch)
+	router.POST("/user/search", handlol.MaterialSearch)
+	router.GET("/v1/search/material/:name", hand.SearchMaterial)
 
 	router.GET("/company/register", loginAs)
 
 	router.GET("/admin", admin)                                                      //Signing in as a company is a must to access this page
-	router.GET("/user", middleware.UserLoginRequired(userMaterialHandler.Materials)) //Loggin ing is must to access this page
+	router.GET("/user", middleware.UserLoginRequired(userMaterialHandler.UserIndex)) //Loggin ing is must to access this page
+	router.GET("/user/materials/:id", middleware.UserLoginRequired(userMaterialHandler.Material))
+	router.GET("/user/rent/:material_id", middleware.UserLoginRequired(userMaterialHandler.UserRentMaterial))
+	router.POST("/user/rent", middleware.UserLoginRequired(userMaterialHandler.UserRentMaterial))
 
 	router.GET("/company", middleware.CompaniesLoginReequired(company)) // company login is essential USE MIDDLE WARE
 	router.POST("/companies/register", cpnySignupHandler.SignupHandler)
@@ -152,7 +163,7 @@ func main() {
 	// http.HandleFunc("/company/material/delete", materialHandle.CompanyMaterialsDelete)
 
 	router.GET("/v1/companies/materials", hand.Materials)
-	router.GET("/v1/companies/materials/:material_id", middleware.CompanyLoginRequired(hand.Material))
+	router.GET("/v1/companies/materials/:material_id", hand.Material)
 	router.PUT("/v1/companies/materials/:id", middleware.CompanyLoginRequired(hand.UpdateMaterial))
 	router.DELETE("/v1/companies/materials/delete/:material_id", middleware.CompanyLoginRequired(hand.DeleteMaterial))
 	router.POST("/v1/companies/materials", middleware.CompanyLoginRequired(hand.StoreMaterial))
