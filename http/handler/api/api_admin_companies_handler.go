@@ -26,6 +26,7 @@ func (ach *AdminCompanyHandler) GetCompanys(w http.ResponseWriter,
 	r *http.Request, _ httprouter.Params) {
 
 	Companys, errs := ach.CompanyService.Companies()
+	// fmt.Println(Companys)
 
 	if errs != nil {
 		fmt.Println(errs)
@@ -43,6 +44,7 @@ func (ach *AdminCompanyHandler) GetCompanys(w http.ResponseWriter,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	// fmt.Println(output)
 	w.Write(output)
 
 	return

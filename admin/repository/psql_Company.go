@@ -21,7 +21,7 @@ func NewCompanyRepositoryImpl(Conn *sql.DB) *CompanyRepositoryImpl {
 // Companies returns all cateogories from the database
 func (cri *CompanyRepositoryImpl) Companies() ([]entity.Company, error) {
 
-	rows, err := cri.conn.Query("SELECT * FROM companies where activated=true")
+	rows, err := cri.conn.Query("SELECT * FROM companies")
 	if err != nil {
 		return nil, errors.New("Could not query the database")
 	}

@@ -191,11 +191,10 @@ func main() {
 	router.GET("/v1/companies/materials", hand.Materials)                          //to show all materials for the user
 	router.GET("/v1/companies/owner/:company_id/materials", hand.MaterialsByOwner) //lists all materials of a single company
 	router.GET("/v1/companies/materials/:material_id", hand.Material)
-	router.PUT("/v1/companies/materials/:id", middleware.CompanyLoginRequired(hand.UpdateMaterial))
-	router.DELETE("/v1/companies/materials/delete/:material_id", middleware.CompanyLoginRequired(hand.DeleteMaterial))
-	router.POST("/v1/companies/materials", middleware.CompanyLoginRequired(hand.StoreMaterial))
+	router.PUT("/v1/companies/materials/:id", hand.UpdateMaterial)
+	router.DELETE("/v1/companies/materials/delete/:material_id", hand.DeleteMaterial)
+	router.POST("/v1/companies/materials", hand.StoreMaterial)
 	router.POST("/v1/companies/login", authHandler.Login)
-	// router.GET("/v1/companies/test", middleware.CompanyLoginRequired(authHandler.TestJWT))
 
 	//handle company api
 	router.GET("/v1/admin/company/:id", apiAdminCompanysHandler.GetSingleCompany)
@@ -210,11 +209,11 @@ func main() {
 	router.POST("/v1/admin/user", apiAdminUsersHandler.PostUser)
 	router.DELETE("/v1/admin/user/:username", apiAdminUsersHandler.DeleteUser)
 	//handle Admin api
-	router.GET("/v1/admin/admins/:username", apiAdminAdminsHandler.GetSingleAdmin)
-	router.GET("/v1/admin/admins", apiAdminAdminsHandler.GetAdmins)
+	router.GET("/v1/admin/admins/:username", apiAdminAdminsHandler.GetSingleAdmin) //TESTED
+	router.GET("/v1/admin/admins", apiAdminAdminsHandler.GetAdmins)                //TESTED
 	router.PUT("/v1/admin/admins/:username", apiAdminAdminsHandler.PutAdmin)
-	router.POST("/v1/admin/admins", apiAdminAdminsHandler.PostAdmin)
-	router.DELETE("/v1/admin/admins/:username", apiAdminAdminsHandler.DeleteAdmin)
+	router.POST("/v1/admin/admins", apiAdminAdminsHandler.PostAdmin)               //TESTED
+	router.DELETE("/v1/admin/admins/:username", apiAdminAdminsHandler.DeleteAdmin) //TESTED
 
 	http.ListenAndServe(":8080", router)
 }
