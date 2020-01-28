@@ -36,6 +36,7 @@ func (ach *AdminAdminHandler) AdminAdmins(w http.ResponseWriter, r *http.Request
 }
 
 // AdminAdminsNew hanlde requests on route /admin/admins/new
+// AdminAdminsNew hanlde requests on route /admin/admins/new
 func (ach *AdminAdminHandler) AdminAdminsNew(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if r.Method == http.MethodPost {
@@ -48,19 +49,21 @@ func (ach *AdminAdminHandler) AdminAdminsNew(w http.ResponseWriter, r *http.Requ
 		ctg.Password = r.FormValue("password")
 
 		mf, fh, err := r.FormFile("catimg")
-		if err != nil {
-			panic(err)
+		if mf != nil {
+			ctg.ImagePath = fh.Filename
+			if err != nil {
+				panic(err)
+			}
+			defer mf.Close()
+			writeFile(&mf, ctg.ImagePath)
+		} else {
+			ctg.ImagePath = "defaultCompany.jpg"
 		}
-		defer mf.Close()
-
-		ctg.ImagePath = fh.Filename
-
-		writeFile(&mf, fh.Filename)
 
 		err = ach.AdminSrv.StoreAdmin(ctg)
 
 		if err != nil {
-			panic(err)
+			ach.tmpl.ExecuteTemplate(w, "admin.admins.new.layout", "username inuse")
 		}
 
 		http.Redirect(w, r, "/admin/admins", http.StatusSeeOther)
@@ -107,11 +110,10 @@ func (ach *AdminAdminHandler) AdminAdminsUpdate(w http.ResponseWriter, r *http.R
 
 			writeFile(&mf, ctg.ImagePath)
 
-			// fmt.Println(ctg.ImagePath)
+			fmt.Println(ctg.ImagePath)
 		} else {
-			ctg.ImagePath = r.FormValue("catimg")
+			ctg.ImagePath = "defaultCompany.jpg"
 		}
-		fmt.Println(ctg)
 		err = ach.AdminSrv.UpdateAdmin(ctg)
 
 		if err != nil {

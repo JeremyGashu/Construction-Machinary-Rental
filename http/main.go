@@ -140,6 +140,7 @@ func main() {
 	router.GET("/user/profile", middleware.UserLoginRequired(userProfileHandler.ProfileIndex))
 	router.GET("/user/material/rented", middleware.UserLoginRequired(userMaterialHandler.GetRentedMaterials))
 	router.POST("/user/profile", middleware.UserLoginRequired(userProfileHandler.UpdateProfile))
+	router.GET("/user/ondiscount", middleware.UserLoginRequired(userMaterialHandler.MaterialsOnDiscount))
 	router.GET("/user/register", login)
 	router.POST("/user/register", userSignupHandler.SignupHandler)
 
@@ -175,7 +176,6 @@ func main() {
 	router.GET("/admin/user", middleware.AdminLoginRequired(adminUsersHandler.AdminUsers))
 	router.POST("/admin/user/new", middleware.AdminLoginRequired(adminUsersHandler.AdminUsersNew))
 	router.GET("/admin/user/new", middleware.AdminLoginRequired(adminUsersHandler.AdminUsersNew))
-
 	router.GET("/admin/users/delete", middleware.AdminLoginRequired(adminUsersHandler.AdminUsersDelete))
 	//handle user
 	// router.GET("/admin/comment", adminCommentsHandler.AdminComments)
@@ -194,6 +194,8 @@ func main() {
 	router.PUT("/v1/companies/materials/:id", hand.UpdateMaterial)
 	router.DELETE("/v1/companies/materials/delete/:material_id", hand.DeleteMaterial)
 	router.POST("/v1/companies/materials", hand.StoreMaterial)
+	router.GET("/v1/materials/discount", hand.MaterialsOnDiscount)
+
 	router.POST("/v1/companies/login", authHandler.Login)
 
 	//handle company api
@@ -211,7 +213,7 @@ func main() {
 	//handle Admin api
 	router.GET("/v1/admin/admins/:username", apiAdminAdminsHandler.GetSingleAdmin) //TESTED
 	router.GET("/v1/admin/admins", apiAdminAdminsHandler.GetAdmins)                //TESTED
-	router.PUT("/v1/admin/admins/:username", apiAdminAdminsHandler.PutAdmin)
+	router.PUT("/v1/admin/admins/:username", apiAdminAdminsHandler.PutAdmin)       //TESTED
 	router.POST("/v1/admin/admins", apiAdminAdminsHandler.PostAdmin)               //TESTED
 	router.DELETE("/v1/admin/admins/:username", apiAdminAdminsHandler.DeleteAdmin) //TESTED
 

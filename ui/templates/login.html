@@ -1,4 +1,7 @@
 {{define "login.layout"}}
+{{template "login.content" .}}
+{{end}}
+{{define "login.content"}}
 <!DOCTYPE html>
 <html>
 
@@ -47,9 +50,6 @@
                                             class="material-icons">menu</i></a>
                                     <ul class="right hide-on-med-and-down">
                                         <li><a href="/">Home</a></li>
-                                        <li><a href="Galary">Galary</a></li>
-                                        <li><a href="Contact">Contact Us</a></li>
-                                        <li><a href="login" class="">Sign in</a></li>
 
                                     </ul>
                                 </div>
@@ -88,6 +88,7 @@
                                         <i class="material-icons prefix">account_circle</i>
                                         <input type="text" name="username" required>
                                         <label>Username</label>
+                                        <p style="color: red;">{{.}}</p>
                                     </div>
 
                                     <div class="input-field">
@@ -155,7 +156,7 @@
                             </div>
 
                             <div class="clearfix input-field">
-                                    <p> <label>
+                                <p> <label>
                                         <input type="radio" name="type" value="user" checked>
                                         <span>User</span>
                                     </label>
@@ -167,17 +168,17 @@
                                 </p>
 
                                 <p> <label>
-                                    <input type="radio" name="type" value="admin">
-                                    <span>Admin</span>
-                                </label>
-                            </p>
-                                    
-                                </div>
+                                        <input type="radio" name="type" value="admin">
+                                        <span>Admin</span>
+                                    </label>
+                                </p>
 
-                            
+                            </div>
+
+
 
                         </div>
-                        
+
                         <div class="right">
                             <input type="submit" name="submit" value="login" class="btn pulse grey darken-4">
                             <input type="button" value="close" class="btn modal-close red darken-2">
@@ -188,7 +189,7 @@
                             <p class="left">Are you New? <a href="/user/register" class="modal-trigger">Register</a></p>
 
                         </div>
-                        
+
 
                     </div>
                 </div><!-- end of modal container -->

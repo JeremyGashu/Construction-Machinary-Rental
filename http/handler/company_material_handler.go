@@ -176,6 +176,7 @@ func (ach *CompanyMaterialHandler) CompanyMaterialsUpdate(w http.ResponseWriter,
 		ctg.Name = r.FormValue("name")
 		ctg.Owner = id
 		ppd, err := strconv.ParseFloat(r.FormValue("priceperday"), 10)
+		discount, _ := strconv.ParseFloat(r.FormValue("discount"), 10)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -190,8 +191,9 @@ func (ach *CompanyMaterialHandler) CompanyMaterialsUpdate(w http.ResponseWriter,
 		if err != nil {
 			fmt.Println(err)
 		}
-		ctg.OnSale = ond
+		ctg.OnDiscount = ond
 
+		ctg.Discount = float32(discount)
 		mf, fh, err := r.FormFile("catimg")
 		if mf != nil {
 			ctg.ImagePath = fh.Filename

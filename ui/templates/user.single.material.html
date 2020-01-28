@@ -14,7 +14,7 @@
             <div class="card-content">
                 
                         <p class="text-accent-3">Material Name :{{ .MaterialName }}</p>
-                        <p>Price Per Day :{{ .PricePerDay }}ETB</p>
+                        {{if .OnDiscount}}<p>Price Per Day:<del>{{ .PricePerDay }}</del>ETB <br> {{.Discount}}%OFF</p>{{else}}<p>Price Per Day:{{ .PricePerDay }}</p>ETB{{end}}
                         <p>Owner Company Name:<a class="modal-trigger" href="#modal1">{{ .CompanyName }}</a></p>
 
                         <a href="/user/rent/{{ .MaterialID }}" style="margin-top: 10px;" class="waves-effect waves-light btn-large">Rent</a>
@@ -35,7 +35,6 @@
                             <p>Phone: {{ .CompanyPhone }}</p>
                             <p>Address: {{ .CompanyAddress }}</p>
                             <p>Rating :{{ .ComppanyRating }}</p>
-                            
 
                             </div>
                             <div class="modal-footer">

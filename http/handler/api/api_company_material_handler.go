@@ -51,6 +51,17 @@ func (ch *CompanyMaterialHandler) DeleteMaterial(w http.ResponseWriter, r *http.
 	http.Redirect(w, r, "/v1/companies/materials", http.StatusSeeOther)
 }
 
+//MaterialsOnDiscount -
+func (ch *CompanyMaterialHandler) MaterialsOnDiscount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	materials, err := ch.materials.MaterialsOnDiscount()
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(err.Error()))
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(materials)
+}
+
 //StoreMaterial -
 func (ch *CompanyMaterialHandler) StoreMaterial(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	l := r.ContentLength

@@ -54,6 +54,30 @@ func (mh *UserMaterialHandler) UserIndex(w http.ResponseWriter, r *http.Request,
 	mh.tmpl.ExecuteTemplate(w, "user.layout", materials)
 }
 
+//MaterialsOnDiscount -
+func (mh *UserMaterialHandler) MaterialsOnDiscount(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	client := http.DefaultClient
+	req, err := http.NewRequest("GET", "http://localhost:8080/v1/materials/discount", nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+	var materials []entity.Material
+	err = json.Unmarshal(body, &materials)
+	// fmt.Println(materials)
+	if err != nil {
+		fmt.Println(err)
+	}
+	mh.tmpl.ExecuteTemplate(w, "user.ondiscount.layout", materials)
+}
+
 //Information - template info provider
 type Information struct {
 	CompanyName        string
@@ -69,7 +93,7 @@ type Information struct {
 	MaterialName      string
 	PricePerDay       float64
 	OnDiscount        bool
-	OnSale            bool
+	Discount          float32
 	MaterialImagePath string
 
 	LogedUser string
@@ -102,7 +126,7 @@ func (mh *UserMaterialHandler) Material(w http.ResponseWriter, r *http.Request, 
 
 	own, _ := mh.materialService.GetOwner(material.Owner) //getting owner from the owner id
 
-	info := Information{CompanyName: own.Name, CompanyAddress: own.Address, CompanyDescription: own.Description, CompanyEmail: own.Email, CompanyImagePath: own.ImagePath, CompanyPhone: own.PhoneNo, ComppanyRating: own.Rating, MaterialID: material.ID, MaterialImagePath: material.ImagePath, MaterialName: material.Name, OnDiscount: material.OnDiscount, OnSale: material.OnSale, PricePerDay: material.PricePerDay}
+	info := Information{CompanyName: own.Name, CompanyAddress: own.Address, CompanyDescription: own.Description, CompanyEmail: own.Email, CompanyImagePath: own.ImagePath, CompanyPhone: own.PhoneNo, ComppanyRating: own.Rating, MaterialID: material.ID, MaterialImagePath: material.ImagePath, MaterialName: material.Name, OnDiscount: material.OnDiscount, Discount: material.Discount, PricePerDay: material.PricePerDay}
 
 	if err != nil {
 		fmt.Println(err)
@@ -148,7 +172,7 @@ func (mh *UserMaterialHandler) UserRentMaterial(w http.ResponseWriter, r *http.R
 		own, _ := mh.materialService.GetOwner(material.Owner) //getting owner from the owner id
 
 		// fmt.Println(own.CompanyID)
-		info := Information{LogedUser: user, CompanyName: own.Name, CompanyAddress: own.Address, CompanyDescription: own.Description, CompanyEmail: own.Email, CompanyImagePath: own.ImagePath, CompanyPhone: own.PhoneNo, ComppanyRating: own.Rating, MaterialID: material.ID, MaterialImagePath: material.ImagePath, MaterialName: material.Name, OnDiscount: material.OnDiscount, OnSale: material.OnSale, PricePerDay: material.PricePerDay, CompanyID: own.CompanyID}
+		info := Information{Discount: material.Discount, LogedUser: user, CompanyName: own.Name, CompanyAddress: own.Address, CompanyDescription: own.Description, CompanyEmail: own.Email, CompanyImagePath: own.ImagePath, CompanyPhone: own.PhoneNo, ComppanyRating: own.Rating, MaterialID: material.ID, MaterialImagePath: material.ImagePath, MaterialName: material.Name, OnDiscount: material.OnDiscount, PricePerDay: material.PricePerDay, CompanyID: own.CompanyID}
 		// fmt.Println(info)
 		if err != nil {
 			fmt.Println(err)
@@ -176,6 +200,8 @@ func (mh *UserMaterialHandler) UserRentMaterial(w http.ResponseWriter, r *http.R
 			return
 		}
 		price, _ := strconv.ParseFloat(r.FormValue("priceperday"), 10)
+		discount, _ := strconv.ParseFloat(r.FormValue("discount"), 10)
+
 		dday, err := strconv.Atoi(parsedDate[2])
 		comp, err := mh.materialService.GetOwner(info.CompanyID)
 
@@ -195,6 +221,7 @@ func (mh *UserMaterialHandler) UserRentMaterial(w http.ResponseWriter, r *http.R
 			fmt.Println(err)
 		}
 		amount := float32((dyear-year)*365+(dmonth-month)*30+(dday-day)) * float32(price)
+		amount = amount - amount*(float32(discount)/100)
 
 		comp.Account = comp.Account + amount
 		// fmt.Println(comp)

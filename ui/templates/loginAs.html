@@ -1,4 +1,7 @@
 {{define "loginAsCompany.layout"}}
+{{template "loginAsCompany.content" .}}
+{{end}}
+{{define "loginAsCompany.content"}}
 <!DOCTYPE html>
 <html>
 
@@ -49,7 +52,7 @@
                                     <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i
                                             class="material-icons">menu</i></a>
                                     <ul class="right hide-on-med-and-down">
-                                        <li><a href="index.html"> Home</a></li>
+                                        <li><a href="/"> Home</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -77,31 +80,37 @@
                             <div class="row">
                                 <div class="input-field hoverable col s12">
                                     <i class="material-icons prefix">description</i>
-                                    <input name="description" id="username" type="text" class="validate" required>
+                                    <input name="description" id="username" type="text" class="validate" required
+                                        autocomplete="off">
                                     <label for="username">Description</label>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field hoverable col s6">
                                     <i class="material-icons prefix">phone</i>
-                                    <input name="phone" id="username" type="text" class="validate" required>
+                                    <input name="phone" id="username" type="text" class="validate" required
+                                        autocomplete="off">
                                     <label for="username">Phone</label>
                                 </div>
                                 <div class="input-field hoverable col s6">
                                     <i class="material-icons prefix">email</i>
-                                    <input name="email" id="email" type="email" class="validate" required>
+                                    <input name="email" id="email" type="email" class="validate" required
+                                        autocomplete="off">
                                     <label for="email">Email</label>
+                                    <p style="color: red;">{{.}}</p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="input-field hoverable col s6">
                                     <i class="material-icons prefix">vpn_key</i>
-                                    <input name="password" id="password" type="password" class="validate" required>
+                                    <input name="password" id="password" type="password" class="validate" required
+                                        minlength="8" autocomplete="off">
                                     <label for="password">Password</label>
                                 </div>
                                 <div class="input-field hoverable col s6">
                                     <i class="material-icons prefix">replay</i>
-                                    <input name="password" id="password2" type="password" class="validate" required>
+                                    <input name="password" id="password2" type="password" class="validate" required
+                                        minlength="8" autocomplete="off">
                                     <label for="password2">Re-Password</label>
                                 </div>
                             </div>

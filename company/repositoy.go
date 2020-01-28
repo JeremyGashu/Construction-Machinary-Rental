@@ -12,4 +12,5 @@ type MaterialRepository interface {
 	GetOwner(id int) (entity.Company, error)
 	RentMaterial(rentInfo entity.RentInformation) error
 	MaterialSearch(name string) ([]entity.Material, error)
+	MaterialsOnDiscount() ([]entity.Material, error)
 }

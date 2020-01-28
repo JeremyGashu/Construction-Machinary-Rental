@@ -24,7 +24,7 @@
                 <div class="card-content">
 
                     <p>Material Name :{{ .Name }}</p>
-                    <p>Price Per Day:{{ .PricePerDay }}ETB</p>
+                    {{if .OnDiscount}}<p>Price Per Day:<del>{{ .PricePerDay }}</del>ETB <br> {{.Discount}}%OFF</p>{{else}}<p>Price Per Day:{{ .PricePerDay }}</p>ETB{{end}}
                 </div>
             </div>
 

@@ -130,3 +130,20 @@ func (mr *MockMaterialRepository) MaterialSearch(name string) ([]entity.Material
 	}
 	return materials, nil
 }
+func (mr *MockMaterialRepository) MaterialsOnDiscount() ([]entity.Material, error) {
+	materials := make([]entity.Material, 0)
+	query := "select * from materials where ondiscount='true'"
+	data, err := mr.conn.Query(query)
+	if err != nil {
+		return materials, errors.New("No user is found")
+	}
+	for data.Next() {
+		var material entity.Material
+		data.Scan(&material.ID, &material.Name, &material.Owner, &material.PricePerDay, &material.OnDiscount, &material.Discount, &material.OnSale, &material.ImagePath) //all the datas that will be added in the category
+		materials = append(materials, material)
+	}
+	if err := data.Err(); err != nil {
+		return materials, errors.New("Some error is occured")
+	}
+	return materials, nil
+}

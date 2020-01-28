@@ -22,6 +22,7 @@ func NewUserSignupHandler(usr admin.UserService, tpl *template.Template) *UserSi
 }
 
 //SignupHandler -
+//SignupHandler -
 func (ush *UserSignupHandler) SignupHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if r.Method == http.MethodPost {
 		ctg := entity.User{}
@@ -32,12 +33,14 @@ func (ush *UserSignupHandler) SignupHandler(w http.ResponseWriter, r *http.Reque
 		ctg.Phone = r.FormValue("phone")
 		ctg.Password = r.FormValue("password")
 		ctg.DeliveryAddress = r.FormValue("address")
+		ctg.ImagePath = "user.jpg"
+		ctg.Account = 200000
 		pass := r.FormValue("pass2")
 		if pass == ctg.Password {
 			err := ush.usrService.StoreUser(ctg)
 
 			if err != nil {
-				panic(err)
+				ush.tmpl.ExecuteTemplate(w, "login.layout", "username found")
 			}
 			http.Redirect(w, r, "/user", http.StatusSeeOther)
 		}

@@ -3,7 +3,6 @@ package service
 import (
 	"github.com/ermiasgashu/Construction-Machinary-Rental/company"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
-	"github.com/ermiasgashu/Construction-Machinary-Rental/material"
 	// "github.com/ermiasgashu/Construction-Machinary-Rental/material"
 )
 
@@ -13,7 +12,7 @@ type MaterialService struct {
 }
 
 //NewMaterialService -
-func NewMaterialService(repo material.MaterialService) *MaterialService {
+func NewMaterialService(repo company.MaterialService) *MaterialService {
 	return &MaterialService{repository: repo}
 }
 
@@ -92,6 +91,15 @@ func (ms *MaterialService) RentMaterial(rentInfo entity.RentInformation) error {
 //MaterialSearch ..
 func (ms *MaterialService) MaterialSearch(name string) ([]entity.Material, error) {
 	materials, err := ms.repository.MaterialSearch(name)
+	if err != nil {
+		return materials, err
+	}
+	return materials, nil
+}
+
+//MaterialsOnDiscount -
+func (ms *MaterialService) MaterialsOnDiscount() ([]entity.Material, error) {
+	materials, err := ms.repository.MaterialsOnDiscount()
 	if err != nil {
 		return materials, err
 	}

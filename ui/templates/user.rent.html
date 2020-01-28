@@ -18,8 +18,7 @@
                         <div class="card-content">
                                 <h4>Material Informations</h4>
                                     <p class="text-accent-3">Material Name :{{ .MaterialName }}</p>
-                                    <p>Price Per Day :{{ .PricePerDay }}ETB</p>
-
+                                    {{if .OnDiscount}}<p>Price Per Day:<del>{{ .PricePerDay }}</del>ETB <br> {{.Discount}}%OFF</p>{{else}}<p>Price Per Day:{{ .PricePerDay }}</p>ETB{{end}}
                                     <h4>Information About {{ .CompanyName }} PLC</h4>
                                         <p>Description: {{ .CompanyDescription }}</p>
                                         <p>Email: {{ .CompanyEmail }}</p>
@@ -47,6 +46,9 @@
                         </div>
                         <div class="input-field">
                             <input name="logedUser" type="hidden" value="{{ .LogedUser }}">
+                        </div>
+                        <div class="input-field">
+                            <input name="discount" type="hidden" value="{{ .Discount }}">
                         </div>
                     
             </div>

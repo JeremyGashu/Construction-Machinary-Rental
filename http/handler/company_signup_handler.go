@@ -35,7 +35,7 @@ func (ush *CompanySignupHandler) SignupHandler(w http.ResponseWriter, r *http.Re
 		err := ush.cpService.StoreCompany(ctg)
 
 		if err != nil {
-			panic(err)
+			ush.tmpl.ExecuteTemplate(w, "loginAsCompany.layout", "email must be unique")
 		}
 
 		http.Redirect(w, r, "/company", http.StatusSeeOther)

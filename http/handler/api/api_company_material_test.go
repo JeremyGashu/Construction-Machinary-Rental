@@ -158,7 +158,6 @@ func TestCompanyMaterialDelete(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	//body, err := ioutil.ReadAll(resp.Body)
 	if resp.StatusCode != http.StatusNoContent {
 		t.Errorf("want %d, got %d", http.StatusOK, resp.StatusCode)
