@@ -72,3 +72,9 @@ func (cs *AdminServiceImpl) DeleteAdmin(id string) error {
 	}
 	return nil
 }
+
+//AuthUser -
+func (cs *AdminServiceImpl) AuthAdmin(username string, password string) bool {
+	c := cs.AdminRepo.AuthAdmin(username, password)
+	return c
+}

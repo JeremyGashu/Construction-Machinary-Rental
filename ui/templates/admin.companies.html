@@ -22,7 +22,6 @@
                 <th scope="col">Address</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Description</th>
-                <th scope="col">Password</th>
                 <th scope="col">Image</th>
                 <th scope="col"></th>
             </tr>
@@ -36,7 +35,6 @@
                 <td> {{ .Address }} </td>
                 <td> {{ .PhoneNo }} </td>
                 <td> {{ .Description }} </td>
-                <td> {{ .Password }} </td>
                 <td> <img src="/assets/img/{{ .ImagePath }}" width="70rem" height="70rem" /> </td>
                 <td> <a href="/admin/company/delete?id={{ .CompanyID }}">Delete</a> </td>
             </tr>

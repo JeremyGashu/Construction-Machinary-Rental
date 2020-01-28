@@ -10,7 +10,7 @@
     <style>
         body {
             background-color: teal;
-            background-image: url("assets/img/back.jpg");
+            background-image: url("/assets/img/back.jpg");
         }
 
         .progress {
@@ -76,45 +76,45 @@
 
                                     <div class="input-field">
                                         <i class="material-icons prefix">toc</i>
-                                        <input type="text" name="firstname">
+                                        <input type="text" name="firstname" required>
                                         <label>Firstname</label>
                                     </div>
                                     <div class="input-field">
                                         <i class="material-icons prefix">toc</i>
-                                        <input type="text" name="lastname">
+                                        <input type="text" name="lastname" required>
                                         <label>lastname</label>
                                     </div>
                                     <div class="input-field">
                                         <i class="material-icons prefix">account_circle</i>
-                                        <input type="text" name="username">
+                                        <input type="text" name="username" required>
                                         <label>Username</label>
                                     </div>
 
                                     <div class="input-field">
                                         <i class="material-icons prefix">email</i>
-                                        <input type="email" name="email" class="validate">
+                                        <input type="email" name="email" class="validate" required>
                                         <label>Email</label>
                                     </div>
                                     <div class="input-field">
                                         <i class="material-icons prefix">phone</i>
-                                        <input type="number" name="phone" class="validate">
+                                        <input type="number" name="phone" class="validate" required>
                                         <label>Phone</label>
                                     </div>
                                     <div class="input-field">
                                         <i class="material-icons prefix">location_on</i>
-                                        <input type="text" name="address" class="validate">
+                                        <input type="text" name="address" class="validate" required>
                                         <label>Delivery Address</label>
                                     </div>
                                     <div class="input-field">
                                         <i class="material-icons prefix">vpn_key</i>
-                                        <input type="password" name="password">
+                                        <input type="password" name="password" minlength="8" required>
                                         <label>Password</label>
                                     </div>
 
 
                                     <div class="input-field">
                                         <i class="material-icons prefix">vpn_key</i>
-                                        <input type="password" name="pass2">
+                                        <input type="password" name="pass2" minlength="8" required>
                                         <label>Confirm password</label>
                                     </div>
                                     <input type="submit" name="submit" value="register"
@@ -165,6 +165,12 @@
                                         <span>Provider</span>
                                     </label>
                                 </p>
+
+                                <p> <label>
+                                    <input type="radio" name="type" value="admin">
+                                    <span>Admin</span>
+                                </label>
+                            </p>
                                     
                                 </div>
 

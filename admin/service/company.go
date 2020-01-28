@@ -114,3 +114,9 @@ func (cs *CompanyServiceImpl) GetRentedMaterials(id int) ([]entity.RentInformati
 	}
 	return infos, nil
 }
+
+//DeleteMaterialsRented -
+func (cs *CompanyServiceImpl) DeleteMaterialsRented(companyid int, materiaid int, username string) bool {
+	b := cs.CompanyRepo.DeleteMaterialsRented(companyid, materiaid, username)
+	return b
+}

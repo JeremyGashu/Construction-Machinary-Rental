@@ -32,13 +32,16 @@ func (ush *UserSignupHandler) SignupHandler(w http.ResponseWriter, r *http.Reque
 		ctg.Phone = r.FormValue("phone")
 		ctg.Password = r.FormValue("password")
 		ctg.DeliveryAddress = r.FormValue("address")
+		pass := r.FormValue("pass2")
+		if pass == ctg.Password {
+			err := ush.usrService.StoreUser(ctg)
 
-		err := ush.usrService.StoreUser(ctg)
-
-		if err != nil {
-			panic(err)
+			if err != nil {
+				panic(err)
+			}
+			http.Redirect(w, r, "/user", http.StatusSeeOther)
 		}
-		http.Redirect(w, r, "/user", http.StatusSeeOther)
+
 	} else {
 
 		ush.tmpl.ExecuteTemplate(w, "login.layout", nil)

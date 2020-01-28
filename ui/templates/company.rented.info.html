@@ -23,8 +23,9 @@
                 <th scope="col">Due Date</th>
                 <th scope="col">Username</th>
                 <th scope="col">Transaction Made</th>
+                <!-- <th scope="col">Mark Returned</th> -->
                 
-                <!-- <th scope="col"></th> -->
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -35,7 +36,7 @@
                 <td>  {{ .DueDate}} </td>
                 <td>  {{ .Username }} </td>
                 <td>  {{ .TransactionMade }} </td>
-                <!-- <td><a href=""><i class="material-icons">delete</i></a></td> -->
+                <td><a href="/company/rented/delete/cid/{{ .CompanyID }}/mid/{{ .MaterialID }}/uid/{{ .Username }}"6><i class="material-icons"></i>Mark Returned</a></td>
 
             </tr>
             {{end}}

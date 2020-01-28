@@ -87,3 +87,19 @@ func (cri *AdminRepositoryImpl) StoreAdmin(c entity.Admin) error {
 
 	return nil
 }
+
+//AuthUser -
+func (cri *AdminRepositoryImpl) AuthAdmin(username string, password string) bool {
+	query := "select username from admin where username=$1 and password=$2"
+	var name string
+	row := cri.conn.QueryRow(query, username, password)
+	err := row.Scan(&name)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false
+		}
+		return false
+	}
+	return true
+}

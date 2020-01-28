@@ -14,6 +14,7 @@ type CompanyRepository interface {
 	ApproveCompany(id int) error
 	CompanyByEmail(email string) (entity.Company, error)
 	GetRentedMaterials(id int) ([]entity.RentInformation, error)
+	DeleteMaterialsRented(companyid int, materiaid int, username string) bool
 	// GetCompanyIDByEmail(email string) (int, error)
 }
 
@@ -24,6 +25,7 @@ type AdminRepo interface {
 	UpdateAdmin(Admin entity.Admin) error
 	DeleteAdmin(uname string) error
 	StoreAdmin(Admin entity.Admin) error
+	AuthAdmin(username string, password string) bool
 }
 
 //UserRepository ..

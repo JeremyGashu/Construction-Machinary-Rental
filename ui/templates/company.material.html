@@ -13,14 +13,15 @@
         <h2>Menu material</h2>
     </div>
     <div class="pt-3 pb-2 mb-3">
-        <a class="btn blue-grey darken-3" href="/company/material/new" role="button">Add Material</a>
+        {{ if .Activated }}<a class="btn blue-grey darken-3" href="/company/material/new" role="button">Add Material</a>{{end}}
+        
     </div>
 
     <br>
     <br>
     <br>
     <div class="row">
-        {{ range . }}
+        {{ range .Materials }}
         <div class="col s12 m3">
             <div class="card">
                 <div class="card-image">

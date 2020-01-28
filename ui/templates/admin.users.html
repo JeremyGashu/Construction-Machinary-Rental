@@ -22,7 +22,6 @@
                 <th scope="col">Email</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Delivery Address</th>
-                <th scope="col">Password</th>
                 <th scope="col">Account</th>
 
                 <th scope="col">Image</th>
@@ -38,7 +37,6 @@
                 <td> {{ .Email}} </td>
                 <td> {{ .Phone }} </td>
                 <td> {{ .DeliveryAddress}} </td>
-                <td> {{ .Password }} </td>
                 <td> {{ .Account }} </td>
                 <td> <img src="/assets/img/{{ .ImagePath }}" width="70rem" height="70rem" /> </td>
                 <td> <a href="/admin/users/delete?username={{ .Username}}">Delete</a> </td>

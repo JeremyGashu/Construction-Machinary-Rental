@@ -93,7 +93,7 @@ func main() {
 
 	authHandler := handlers.NewCompanyAuthHandler(CompanyServ)
 
-	allAuthHandler := handlers.NewAuthHander(CompanyServ, UserServ)
+	allAuthHandler := handlers.NewAuthHander(CompanyServ, UserServ, AdminServ)
 
 	apiAdminUsersHandler := api.NewAdminUserHandler(UserServ)
 
@@ -108,9 +108,9 @@ func main() {
 	// materialHandle := handlers.NewCompanyMaterialHandler(templ, ser)
 	// serv := api.NewCompanyMaterialHandler(materialSer)
 	// ap := api.NewCompanyUseCaseHander(*CompanyServ)
-	CommentRepo := repository.NewCommentRepositoryImpl(dbconn)
-	CommentServ := service.NewCommentServiceImpl(CommentRepo)
-	adminCommentsHandler := handlers.NewAdminCommentHandler(templ, CommentServ)
+	// CommentRepo := repository.NewCommentRepositoryImpl(dbconn)
+	// CommentServ := service.NewCommentServiceImpl(CommentRepo)
+	// adminCommentsHandler := handlers.NewAdminCommentHandler(templ, CommentServ)
 
 	userSignupHandler := handlers.NewUserSignupHandler(UserServ, templ)
 	cpnySignupHandler := handlers.NewCompanySignUpHandler(CompanyServ, templ)
@@ -130,7 +130,6 @@ func main() {
 
 	router.GET("/v1/search/material/:name", hand.SearchMaterial)
 
-	router.GET("/admin", admin)
 	//Signing in as a company is a must to access this page
 	router.GET("/user", middleware.UserLoginRequired(userMaterialHandler.UserIndex)) //Loggin ing is must to access this page
 	router.GET("/user/materials/:id", middleware.UserLoginRequired(userMaterialHandler.Material))
@@ -150,6 +149,7 @@ func main() {
 	router.GET("/company/material/update", middleware.CompaniesLoginReequired(handlol.CompanyMaterialsUpdate))
 	router.GET("/company/material/delete", middleware.CompaniesLoginReequired(handlol.CompanyMaterialsDelete))
 	router.POST("/company/material/update", middleware.CompaniesLoginReequired(handlol.CompanyMaterialsUpdate))
+	router.GET("/company/rented/delete/cid/:company_id/mid/:material_id/uid/:user_id", middleware.CompaniesLoginReequired(handlol.DeleteRentedMaterial))
 	router.POST("/company/material/new", middleware.CompaniesLoginReequired(handlol.CompanyMaterialsNew))
 	router.GET("/company/materials/rented", middleware.CompaniesLoginReequired(handlol.GetRentedMaterials))
 	router.GET("/company/profile", middleware.CompaniesLoginReequired(cpnyProfileHandler.ProfileIndex))
@@ -158,29 +158,30 @@ func main() {
 	router.POST("/companies/register", cpnySignupHandler.SignupHandler)
 	router.GET("/company/register", loginAs)
 
+	router.GET("/admin", middleware.AdminLoginRequired(admin))
 	router.GET("/admin/admins", adminAdminsHandler.AdminAdmins)
-	router.POST("/admin/admins/new", adminAdminsHandler.AdminAdminsNew)
-	router.GET("/admin/admins/new", adminAdminsHandler.AdminAdminsNew)
-	router.GET("/admin/admins/delete", adminAdminsHandler.AdminAdminsDelete)
+	router.POST("/admin/admins/new", middleware.AdminLoginRequired(adminAdminsHandler.AdminAdminsNew))
+	router.GET("/admin/admins/new", middleware.AdminLoginRequired(adminAdminsHandler.AdminAdminsNew))
+	router.GET("/admin/admins/delete", middleware.AdminLoginRequired(adminAdminsHandler.AdminAdminsDelete))
 	//handle company
-	router.GET("/admin/company", adminCompanysHandler.AdminCompanys)
-	router.POST("/admin/company/new", adminCompanysHandler.AdminCompanysNew)
-	router.GET("/admin/company/new", adminCompanysHandler.AdminCompanysNew)
-	router.GET("/admin/requests", adminCompanysHandler.Unactivated)
-	router.GET("/admin/company/approve", adminCompanysHandler.Approve)
+	router.GET("/admin/company", middleware.AdminLoginRequired(adminCompanysHandler.AdminCompanys))
+	router.POST("/admin/company/new", middleware.AdminLoginRequired(adminCompanysHandler.AdminCompanysNew))
+	router.GET("/admin/company/new", middleware.AdminLoginRequired(adminCompanysHandler.AdminCompanysNew))
+	router.GET("/admin/requests", middleware.AdminLoginRequired(adminCompanysHandler.Unactivated))
+	router.GET("/admin/company/approve", middleware.AdminLoginRequired(adminCompanysHandler.Approve))
 
-	router.GET("/admin/company/delete", adminCompanysHandler.AdminCompanysDelete)
+	router.GET("/admin/company/delete", middleware.AdminLoginRequired(adminCompanysHandler.AdminCompanysDelete))
 	//handle user
-	router.GET("/admin/user", adminUsersHandler.AdminUsers)
-	router.POST("/admin/user/new", adminUsersHandler.AdminUsersNew)
-	router.GET("/admin/user/new", adminUsersHandler.AdminUsersNew)
+	router.GET("/admin/user", middleware.AdminLoginRequired(adminUsersHandler.AdminUsers))
+	router.POST("/admin/user/new", middleware.AdminLoginRequired(adminUsersHandler.AdminUsersNew))
+	router.GET("/admin/user/new", middleware.AdminLoginRequired(adminUsersHandler.AdminUsersNew))
 
-	router.GET("/admin/users/delete", adminUsersHandler.AdminUsersDelete)
+	router.GET("/admin/users/delete", middleware.AdminLoginRequired(adminUsersHandler.AdminUsersDelete))
 	//handle user
-	router.GET("/admin/comment", adminCommentsHandler.AdminComments)
-	router.GET("/admin/comment/new", adminCommentsHandler.AdminCommentsNew)
-	router.POST("/admin/comment/new", adminCommentsHandler.AdminCommentsNew)
-	router.GET("/admin/comment/delete", adminCommentsHandler.AdminCommentsDelete)
+	// router.GET("/admin/comment", adminCommentsHandler.AdminComments)
+	// router.GET("/admin/comment/new", adminCommentsHandler.AdminCommentsNew)
+	// router.POST("/admin/comment/new", adminCommentsHandler.AdminCommentsNew)
+	// router.GET("/admin/comment/delete", adminCommentsHandler.AdminCommentsDelete)
 
 	// http.HandleFunc("/company/material", materialHandle.CompanyMaterials)
 	// http.HandleFunc("/company/material/new", materialHandle.CompanyMaterialsNew)

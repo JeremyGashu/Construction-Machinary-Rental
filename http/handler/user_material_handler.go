@@ -163,11 +163,18 @@ func (mh *UserMaterialHandler) UserRentMaterial(w http.ResponseWriter, r *http.R
 		year := rentdate.Year()
 
 		info.RentDate = fmt.Sprintf("%d-%d-%d", year, month, day)
+
 		info.Username = r.FormValue("logedUser")
 		info.CompanyID, _ = strconv.Atoi(r.FormValue("companyID"))
 		info.DueDate = r.FormValue("returnDate")
+		valid := VaidDate(fmt.Sprintf("%d-%d-%d", year, month, day), info.DueDate)
+
 		parsedDate := strings.Split(r.FormValue("returnDate"), "-")
 		info.MaterialID, _ = strconv.Atoi(r.FormValue("materialID"))
+		if !valid {
+			http.Redirect(w, r, "/user/rent/"+r.FormValue("materialID"), http.StatusSeeOther)
+			return
+		}
 		price, _ := strconv.ParseFloat(r.FormValue("priceperday"), 10)
 		dday, err := strconv.Atoi(parsedDate[2])
 		comp, err := mh.materialService.GetOwner(info.CompanyID)
@@ -205,6 +212,7 @@ func (mh *UserMaterialHandler) UserRentMaterial(w http.ResponseWriter, r *http.R
 			info.TransactionMade = float64(0)
 
 		}
+
 		err = mh.comp.UpdateCompany(comp)
 		if err != nil {
 			fmt.Println(err)
@@ -248,4 +256,26 @@ func GetLogedUserFromJWT(r *http.Request) (string, error) {
 	}
 	user := token.Claims.(jwt.MapClaims)["auth-information"].(map[string]interface{})["Value"].(string)
 	return user, nil
+}
+func VaidDate(now string, due string) bool {
+	NOW := strings.Split(now, "-")
+	nowDay, _ := strconv.Atoi(NOW[2])
+	nowMonth, _ := strconv.Atoi(NOW[1])
+	nowYear, _ := strconv.Atoi(NOW[0])
+	DUE := strings.Split(due, "-")
+	dueD, _ := strconv.Atoi(DUE[2])
+	dueM, _ := strconv.Atoi(DUE[1])
+	dueY, _ := strconv.Atoi(DUE[0])
+	if dueD < nowDay {
+		if nowMonth < dueM && nowYear <= dueY {
+			return true
+		}
+		return false
+	} else if dueD > nowDay {
+		if nowMonth <= dueM && nowYear <= dueY {
+			return true
+		}
+	}
+	return false
+	// if(nowYear <= dueY && nowMonth <= dueM && nowDay < )
 }

@@ -15,18 +15,20 @@ import (
 type AuthHandler struct {
 	company admin.CompanyService
 	user    admin.UserService
+	admin   admin.AdminService
 }
 
 //Info -
 type Info struct {
-	Type  string
-	Value string
-	ID    int
+	Type      string
+	Value     string
+	ID        int
+	Activated bool
 }
 
 //NewAuthHander -
-func NewAuthHander(c admin.CompanyService, u admin.UserService) *AuthHandler {
-	return &AuthHandler{company: c, user: u}
+func NewAuthHander(c admin.CompanyService, u admin.UserService, adm admin.AdminService) *AuthHandler {
+	return &AuthHandler{company: c, user: u, admin: adm}
 }
 
 //Login -
@@ -66,7 +68,8 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request, ps httprout
 			if err != nil {
 				fmt.Println(err)
 			}
-			userIn := Info{Type: "provider", Value: username, ID: comp.CompanyID}
+			userIn := Info{Type: "provider", Value: username, ID: comp.CompanyID, Activated: comp.Activated}
+			// fmt.Println(userIn)
 
 			token, _ := GenerateToken(userIn) //token generated
 
@@ -82,6 +85,29 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request, ps httprout
 		} else {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}
+	} else if loggedAs == "admin" {
+		authenticated := ah.admin.AuthAdmin(username, password)
+		// fmt.Println(authenticated)
+		if authenticated {
+
+			userIn := Info{Type: "admin", Value: username}
+
+			token, _ := GenerateToken(userIn) //token generated
+
+			coo := http.Cookie{
+				Name:    "auth-information",
+				Value:   token,
+				Expires: time.Now().Add(time.Hour * 2),
+			} //token saved as cookie in jwt foormat which is more secured
+			http.SetCookie(w, &coo)
+
+			// w.Header().Add("authorization", token)
+			http.Redirect(w, r, "/admin", http.StatusSeeOther)
+		} else {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+		}
+	} else {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
 

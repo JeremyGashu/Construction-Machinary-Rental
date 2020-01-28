@@ -42,9 +42,22 @@ func (ach *CompanyMaterialHandler) CompanyIndex(w http.ResponseWriter, r *http.R
 	ach.tmpl.ExecuteTemplate(w, "company.layout", user)
 }
 
+type InfoMulti struct {
+	Activated bool
+	Materials []entity.Material
+}
+
 // CompanyMaterials handle requests on route /Company/Materials
 func (ach *CompanyMaterialHandler) CompanyMaterials(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
 	user, err := GetUserFromJWT(r)
+	if err != nil {
+		fmt.Println(err)
+	}
+	USER, err := ach.comp.Company(int(user))
+	if err != nil {
+		fmt.Println(err)
+	}
 	id := int(user)
 	if err != nil {
 		fmt.Println(err)
@@ -64,12 +77,14 @@ func (ach *CompanyMaterialHandler) CompanyMaterials(w http.ResponseWriter, r *ht
 	var materials []entity.Material
 
 	err = json.Unmarshal(body, &materials)
+	INFO := InfoMulti{Activated: USER.Activated, Materials: materials}
+
 	// fmt.Println(url)
 	if err != nil {
 		panic(err)
 
 	}
-	ach.tmpl.ExecuteTemplate(w, "company.material.layout", materials)
+	ach.tmpl.ExecuteTemplate(w, "company.material.layout", INFO)
 }
 
 // CompanyMaterialsNew hanlde requests on route /Company/Materials/new
@@ -77,7 +92,7 @@ func (ach *CompanyMaterialHandler) CompanyMaterialsNew(w http.ResponseWriter, r 
 
 	if r.Method == http.MethodPost {
 		user, err := GetUserFromJWT(r)
-		
+
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -101,13 +116,13 @@ func (ach *CompanyMaterialHandler) CompanyMaterialsNew(w http.ResponseWriter, r 
 		ctg.Owner = id
 		mf, fh, err := r.FormFile("catimg")
 		if err != nil {
-			panic(err)
+			ctg.ImagePath = "defaultImage.jpg"
+		} else {
+			ctg.ImagePath = fh.Filename
+			defer mf.Close()
+
+			writeFile(&mf, fh.Filename)
 		}
-		defer mf.Close()
-
-		ctg.ImagePath = fh.Filename
-
-		writeFile(&mf, fh.Filename)
 
 		err = ach.MaterialSrv.AddMaterial(ctg)
 
@@ -191,7 +206,7 @@ func (ach *CompanyMaterialHandler) CompanyMaterialsUpdate(w http.ResponseWriter,
 
 			fmt.Println(ctg.ImagePath)
 		} else {
-			ctg.ImagePath = r.FormValue("catimg")
+			ctg.ImagePath = "defaultCompany.jpg"
 		}
 
 		fmt.Println(ctg)
@@ -280,11 +295,34 @@ func (ach *CompanyMaterialHandler) GetRentedMaterials(w http.ResponseWriter, r *
 		fmt.Println(err)
 	}
 	usr, err := ach.comp.GetRentedMaterials(int(user))
-	fmt.Println(usr)
+	// fmt.Println(usr)
 	if err != nil {
 		fmt.Println(err)
 	}
-	ach.tmpl.ExecuteTemplate(w, "user.rented.info.layout", usr)
+	ach.tmpl.ExecuteTemplate(w, "company.rented.info.layout", usr)
+}
+
+//DeleteRentedMaterial -
+func (ach *CompanyMaterialHandler) DeleteRentedMaterial(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	rawCID := ps.ByName("company_id")
+	CID, err := strconv.Atoi(rawCID) //1
+	if err != nil {
+		fmt.Println(err)
+	}
+	rawMID := ps.ByName("material_id")
+	MID, err := strconv.Atoi(rawMID) //1
+	if err != nil {
+		fmt.Println(err)
+	}
+	username := ps.ByName("user_id")
+	fmt.Println(username, CID, MID)
+	deleted := ach.comp.DeleteMaterialsRented(CID, MID, username)
+	if deleted {
+		http.Redirect(w, r, "/company/materials/rented", http.StatusSeeOther)
+	} else {
+		fmt.Println("Error in deleting materials rented")
+	}
+
 }
 
 //GetUserFromJWT - GETS USER FROM JWTT

@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 )
@@ -141,7 +142,7 @@ func (cri *CompanyRepositoryImpl) CompanyByEmail(email string) (entity.Company, 
 	query := "select * from companies where email=$1"
 	Company := entity.Company{}
 
-	err := cri.conn.QueryRow(query, email).Scan(&Company.CompanyID, &Company.Name, &Company.Email, &Company.Address, &Company.PhoneNo, &Company.Description, &Company.Password, &Company.ImagePath, &Company.Rating, &Company.Account, &Company.Activated)
+	err := cri.conn.QueryRow(query, email).Scan(&Company.CompanyID, &Company.Name, &Company.Email, &Company.PhoneNo, &Company.Address, &Company.Description, &Company.Rating, &Company.ImagePath, &Company.Password, &Company.Account, &Company.Activated)
 	if err != nil {
 		return Company, err
 	}
@@ -165,4 +166,15 @@ func (cri *CompanyRepositoryImpl) GetRentedMaterials(id int) ([]entity.RentInfor
 		return infos, errors.New("Some error is occured")
 	}
 	return infos, nil
+}
+
+//DeleteMaterialsRented -
+func (cri *CompanyRepositoryImpl) DeleteMaterialsRented(companyid int, materiaid int, username string) bool {
+	query := "delete from materials_rented where material_id=$1 and company_id=$2 and borrower=$3"
+	_, err := cri.conn.Exec(query, materiaid, companyid, username)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return true
 }
