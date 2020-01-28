@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strings"
 
 	"github.com/julienschmidt/httprouter"
 
@@ -47,6 +48,11 @@ const (
 	dbname   = "constructiondb"
 )
 
+//ParseDate -
+func ParseDate(date string) string {
+	dat := strings.Split(date, "T")
+	return dat[0]
+}
 func main() {
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
@@ -72,6 +78,7 @@ func main() {
 
 	CompanyRepo := repository.NewCompanyRepositoryImpl(dbconn)
 	CompanyServ := service.NewCompanyServiceImpl(CompanyRepo)
+
 	adminCompanysHandler := handlers.NewAdminCompanyHandler(templ, CompanyServ)
 	apiAdminCompanysHandler := api.NewAdminCompanyHandler(CompanyServ)
 
@@ -80,6 +87,8 @@ func main() {
 	//User
 	UserRepo := repository.NewUserRepositoryImpl(dbconn)
 	UserServ := service.NewUserServiceImpl(UserRepo)
+	// b := UserServ.Pay("eyuelyemane", 2000)
+	// fmt.Println(b)
 	adminUsersHandler := handlers.NewAdminUserHandler(templ, UserServ)
 
 	authHandler := handlers.NewCompanyAuthHandler(CompanyServ)
@@ -90,9 +99,11 @@ func main() {
 
 	materialRepo := comprep.NewMaterialRepository(dbconn)
 	ser := compser.NewMaterialService(materialRepo)
+
 	hand := api.NewCompanyMaterialHandler(ser)
-	handlol := handlers.NewCompanyMaterialHandler(templ, ser)
-	userMaterialHandler := handlers.NewUserMaterialHandler(ser, templ)
+	handlol := handlers.NewCompanyMaterialHandler(templ, ser, CompanyServ)
+	userMaterialHandler := handlers.NewUserMaterialHandler(ser, templ, UserServ)
+	userProfileHandler := handlers.NewUserProfileHandler(ser, templ, UserServ)
 
 	// materialHandle := handlers.NewCompanyMaterialHandler(templ, ser)
 	// serv := api.NewCompanyMaterialHandler(materialSer)
@@ -103,6 +114,7 @@ func main() {
 
 	userSignupHandler := handlers.NewUserSignupHandler(UserServ, templ)
 	cpnySignupHandler := handlers.NewCompanySignUpHandler(CompanyServ, templ)
+	cpnyProfileHandler := handlers.NewCompanyProfileHandler(ser, templ, CompanyServ)
 
 	//THIS WILL BE CLASSIFIED AS CLIENT AND SERVER FOR LATER US
 	// fs := http.FileServer(http.Dir("../ui/assets"))
@@ -112,26 +124,39 @@ func main() {
 	router.POST("/login", allAuthHandler.Login)
 	router.GET("/logout", allAuthHandler.Logout)
 
-	router.HEAD("/", index)
 	router.GET("/", handlol.IndexMaterialSearch)
+	// router.GET("/", handlol.IndexMaterialSearch)
 	router.POST("/", handlol.IndexMaterialSearch)
-	router.GET("/user/search", handlol.MaterialSearch)
-	router.POST("/user/search", handlol.MaterialSearch)
+
 	router.GET("/v1/search/material/:name", hand.SearchMaterial)
 
-	router.GET("/company/register", loginAs)
-
-	router.GET("/admin", admin)                                                      //Signing in as a company is a must to access this page
+	router.GET("/admin", admin)
+	//Signing in as a company is a must to access this page
 	router.GET("/user", middleware.UserLoginRequired(userMaterialHandler.UserIndex)) //Loggin ing is must to access this page
 	router.GET("/user/materials/:id", middleware.UserLoginRequired(userMaterialHandler.Material))
 	router.GET("/user/rent/:material_id", middleware.UserLoginRequired(userMaterialHandler.UserRentMaterial))
 	router.POST("/user/rent", middleware.UserLoginRequired(userMaterialHandler.UserRentMaterial))
-
-	router.GET("/company", middleware.CompaniesLoginReequired(company)) // company login is essential USE MIDDLE WARE
-	router.POST("/companies/register", cpnySignupHandler.SignupHandler)
-
+	router.GET("/user/search", middleware.UserLoginRequired(handlol.MaterialSearch))
+	router.POST("/user/search", middleware.UserLoginRequired(handlol.MaterialSearch))
+	router.GET("/user/profile", middleware.UserLoginRequired(userProfileHandler.ProfileIndex))
+	router.GET("/user/material/rented", middleware.UserLoginRequired(userMaterialHandler.GetRentedMaterials))
+	router.POST("/user/profile", middleware.UserLoginRequired(userProfileHandler.UpdateProfile))
 	router.GET("/user/register", login)
 	router.POST("/user/register", userSignupHandler.SignupHandler)
+
+	router.GET("/company", middleware.CompaniesLoginReequired(handlol.CompanyIndex))
+	router.GET("/company/materials", middleware.CompaniesLoginReequired(handlol.CompanyMaterials)) // company login is essential USE MIDDLE WARE
+	router.GET("/company/material/new", middleware.CompaniesLoginReequired(handlol.CompanyMaterialsNew))
+	router.GET("/company/material/update", middleware.CompaniesLoginReequired(handlol.CompanyMaterialsUpdate))
+	router.GET("/company/material/delete", middleware.CompaniesLoginReequired(handlol.CompanyMaterialsDelete))
+	router.POST("/company/material/update", middleware.CompaniesLoginReequired(handlol.CompanyMaterialsUpdate))
+	router.POST("/company/material/new", middleware.CompaniesLoginReequired(handlol.CompanyMaterialsNew))
+	router.GET("/company/materials/rented", middleware.CompaniesLoginReequired(handlol.GetRentedMaterials))
+	router.GET("/company/profile", middleware.CompaniesLoginReequired(cpnyProfileHandler.ProfileIndex))
+	router.POST("/company/profile", middleware.CompaniesLoginReequired(cpnyProfileHandler.UpdateProfile))
+
+	router.POST("/companies/register", cpnySignupHandler.SignupHandler)
+	router.GET("/company/register", loginAs)
 
 	router.GET("/admin/admins", adminAdminsHandler.AdminAdmins)
 	router.POST("/admin/admins/new", adminAdminsHandler.AdminAdminsNew)
@@ -162,7 +187,8 @@ func main() {
 	// http.HandleFunc("/company/material/update", materialHandle.CompanyMaterialsUpdate)
 	// http.HandleFunc("/company/material/delete", materialHandle.CompanyMaterialsDelete)
 
-	router.GET("/v1/companies/materials", hand.Materials)
+	router.GET("/v1/companies/materials", hand.Materials)                          //to show all materials for the user
+	router.GET("/v1/companies/owner/:company_id/materials", hand.MaterialsByOwner) //lists all materials of a single company
 	router.GET("/v1/companies/materials/:material_id", hand.Material)
 	router.PUT("/v1/companies/materials/:id", middleware.CompanyLoginRequired(hand.UpdateMaterial))
 	router.DELETE("/v1/companies/materials/delete/:material_id", middleware.CompanyLoginRequired(hand.DeleteMaterial))

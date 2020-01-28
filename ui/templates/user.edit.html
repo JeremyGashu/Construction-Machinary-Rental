@@ -10,10 +10,10 @@
         class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h2>User Profile</h2>
     </div>
-    <form method="POST" action="" enctype="multipart/form-data">
+    <form method="POST" action="/user/profile" enctype="multipart/form-data">
         <div class="row">
-            <img src="/assets/img/{{ .ImagePath }}" width="80px" height="80px" />
-            <label>{{.Account}}21212 Birrs in Account</label>
+            <img id="profilepicture" src="/assets/img/{{ .ImagePath }}" width="80px" height="80px" />
+            <label style="font-size: 17px;">{{.Account}} Birrs in Account</label>
         </div>
         <h4>Edit Profile <i class=" material-icons">edit</i></h4>
         <input type="hidden" name="username" value="{{ .Username }}" />
@@ -21,34 +21,48 @@
             <label for="name" class="col-sm-2 col-form-label">FirstName</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" name="firstname" id="firstname" placeholder="FirstName"
-                    value="{{ if .FirstName }} {{ .FirstName }} {{ end }}">
+                    value="{{ if .FirstName }}{{ .FirstName }}{{ end }}" required>
             </div>
         </div>
         <div class="form-group row">
             <label for="name" class="col-sm-2 col-form-label">LastName</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" name="lastname" id="lastname" placeholder="LastName"
-                    value="{{ if .LastName }} {{ .LastName }} {{ end }}">
+                    value="{{ if .LastName }}{{ .LastName }}{{ end }}" required>
             </div>
         </div>
         <div class="form-group row">
             <label for="name" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-10">
                 <input type="email" class="form-control" name="email" id="email" placeholder="Email"
-                    value="{{ if .Email }} {{ .Email }} {{ end }}">
+                    value="{{ if .Email }}{{ .Email }}{{ end }}" required>
             </div>
         </div>
         <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Phone</label>
+                <div class="col-sm-10">
+                    <input type="tel" class="form-control" name="phone" id="email" placeholder="Phone"
+                        value="{{ if .Phone }}{{ .Phone }}{{ end }}" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                    <label for="name" class="col-sm-2 col-form-label">Delivery Address</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="delivery" id="email" placeholder="Delivery Address"
+                            value="{{ if .DeliveryAddress }}{{ .DeliveryAddress }}{{ end }}" required>
+                    </div>
+                </div>
+        <!-- <div class="form-group row">
             <label for="name" class="col-sm-2 col-form-label">Password</label>
             <div class="col-sm-10">
                 <input type="password" class="form-control" name="password" id="password" placeholder="Password"
-                    value="{{ if .Password }} {{ .Password }} {{ end }}">
+                    value="{{ if .Password }}{{ .Password }}{{ end }}" required>
             </div>
-        </div>
+        </div> -->
         <div class="form-group">
             <label for="catimg" class="col-sm-2 col-form-label">Upload New Image</label>
             <div class="col-sm-10">
-                <input type="file" value="{{ if .ImagePath }} {{ .ImagePath }} {{ end }}" class="form-control-file"
+                <input type="file" value="{{ if .ImagePath }}{{ .ImagePath }}{{ end }}" class="form-control-file"
                     name="catimg" id="catimg">
             </div>
         </div>

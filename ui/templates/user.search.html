@@ -12,14 +12,12 @@
     <div class="col s12 m3">
         <div class="card">
             <div class="card-image">
-                <img src="/assets/img/yellow_hat.jpg" width="12px">
+                <img src="/assets/img/{{ .ImagePath }}" width="12px">
                 <span class="card-title yellow-text">{{ .Name }}</span>
-                <a href="" class="btn-floating halfway-fab waves-effect waves-light blue-grey darken-3"><i
+                <a href="/user/materials/{{ .ID }}" class="btn-floating halfway-fab waves-effect waves-light blue-grey darken-3"><i
                         class="material-icons">add</i></a>
             </div>
             <div class="card-content">
-                <p>ID :{{ .ID }}</p>
-                <br>
                 <p>Name :{{ .Name }}</p>
                 <br>
                 <p>Price :{{ .PricePerDay }}</p>

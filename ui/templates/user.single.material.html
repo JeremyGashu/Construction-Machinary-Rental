@@ -8,7 +8,7 @@
     <div class="col s12 m5 l5">
         <div class="card">
             <div class="card-image">
-                <img src="/assets/img/yellow_hat.jpg">
+                <img src="/assets/img/{{ .MaterialImagePath }}">
                  
             </div>
             <div class="card-content">
@@ -28,7 +28,7 @@
                         <!-- Modal Structure -->
                         <div id="modal1" class="modal">
                             <div class="modal-content">
-                                    <img src="/assets/img/yellow_hat.jpg" width="300px"> <!--imagepath-->
+                                    <img src="/assets/img/{{ .CompanyImagePath }}" width="150px"> <!--imagepath-->
                             <h4>Company Name {{ .CompanyName }} PLC</h4>
                             <p>Description: {{ .CompanyDescription }}</p>
                             <p>Email: {{ .CompanyEmail }}</p>

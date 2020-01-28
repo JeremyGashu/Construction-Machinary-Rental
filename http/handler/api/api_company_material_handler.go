@@ -92,6 +92,7 @@ func (ch *CompanyMaterialHandler) Material(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	material, err := ch.materials.Material(ID)
+
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte(err.Error()))
@@ -162,4 +163,18 @@ func (ch *CompanyMaterialHandler) SearchMaterial(w http.ResponseWriter, r *http.
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(materials)
+}
+
+//MaterialsByOwner -
+func (ch *CompanyMaterialHandler) MaterialsByOwner(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	CID := ps.ByName("company_id")
+	id, _ := strconv.Atoi(CID)
+	materials, err := ch.materials.MaterialByCompanyOwner(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(err.Error()))
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(materials)
+
 }

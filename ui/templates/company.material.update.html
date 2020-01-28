@@ -17,44 +17,58 @@
             <label for="name" class="col-sm-2 col-form-label">Material Name</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" name="name" id="firstname" placeholder="Material Name"
-                    value="{{ if .Name }} {{ .Name }} {{ end }}">
+                    value="{{ if .Name }}{{ .Name }}{{ end }}">
             </div>
         </div>
         <div class="form-group row">
             <label for="name" class="col-sm-2 col-form-label">Price Per Day</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" name="priceperday" id="lastname" placeholder="Price Per Day"
-                    value="{{ if .PricePerDay }} {{ .PricePerDay }} {{ end }}">
+                    value="{{ if .PricePerDay }}{{ .PricePerDay }}{{ end }}">
             </div>
         </div>
-        <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">On Discount</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="ondiscount" id="email" placeholder="On Discount"
-                    value="{{ if .OnDiscount }} {{ .OnDiscount }} {{ end }}">
+        <div class="clearfix input-field">
+                <p> <label>
+                    <input type="radio" name="discountStatus" value="true" >
+                    <span>On Discount</span>
+                </label>
+            </p>
+            <p> <label>
+                    <input type="radio" name="discountStatus" value="false" checked>
+                    <span>Not On Discount</span>
+                </label>
+            </p>
+                
             </div>
-        </div>
         <div class="form-group row">
             <label for="name" class="col-sm-2 col-form-label">Discount</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" name="discount" id="password" placeholder="Discount"
-                    value="{{ if .OnDiscount }} {{ .OnDiscount }} {{ end }}">
+                <input type="text" class="form-control" name="discount" placeholder="Discount"
+                    value="{{ if .OnDiscount }}{{ .Discount }}{{else}}{{0}}{{ end }}">
+                    <input type="hidden" class="form-control" name="ID" placeholder="Discount"
+                    value="{{ .ID }}">
             </div>
         </div>
-        <div class="form-group row">
-            <label for="name" class="col-sm-2 col-form-label">OnSale </label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="onsale " id="password" placeholder="onsale "
-                    value="{{ if .OnSale  }} {{ .OnSale  }} {{ end }}">
+        <div class="clearfix input-field">
+                <p> <label>
+                    <input type="radio" name="sellStatus" value="true" >
+                    <span>On Sale</span>
+                </label>
+            </p>
+            <p> <label>
+                    <input type="radio" name="sellStatus" value="false" checked>
+                    <span>Not on Sale</span>
+                </label>
+            </p>
+                
             </div>
-        </div>
         <div class="col-sm-10">
             <img src="/assets/img/{{ .ImagePath }}" width="80px" height="80px" />
         </div>
         <div class="form-group">
             <label for="catimg" class="col-sm-2 col-form-label">Upload New Image</label>
             <div class="col-sm-10">
-                <input type="file" class="form-control-file" name="catimg" id="catimg">
+                <input type="file" class="form-control-file" name="catimg" id="catimg" value="{{ if .ImagePath }}{{ .ImagePath }}{{ end }}">
             </div>
         </div>
         <div class="form-group row">

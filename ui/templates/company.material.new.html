@@ -21,10 +21,10 @@
             <div class="form-group row">
                 <label for="name" class="col-sm-2 col-form-label">Price Per Day</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="priceperday" id="name" placeholder="Price Per Day">
+                    <input type="number" class="form-control" name="priceperday" id="name" placeholder="Price Per Day">
                 </div>
             </div>
-            <div class="form-group row">
+            <!-- <div class="form-group row">
                 <label for="name" class="col-sm-2 col-form-label">On Discount</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" name="ondiscount" id="name" placeholder="On discount">
@@ -36,20 +36,30 @@
                 <div class="col-sm-10">
                     <input type="text" class="form-control" name="discount" id="name" placeholder="Discount">
                 </div>
-            </div>
+            </div> -->
 
-            <div class="form-group row">
-                <label for="name" class="col-sm-2 col-form-label">On Sale</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" name="onsale" id="name" placeholder="On Sale">
+            <div class="clearfix input-field">
+                    <p> <label>
+                        <input type="radio" name="sellStatus" value="true" >
+                        <span>On Sale</span>
+                    </label>
+                </p>
+                <p> <label>
+                        <input type="radio" name="sellStatus" value="false" checked>
+                        <span>Not on Sale</span>
+                    </label>
+                </p>
+                    
                 </div>
-            </div>
+
             <div class="form-group">
                 <label for="catimg" class="col-sm-2 col-form-label">Upload Image</label>
                 <div class="col-sm-10">
                     <input type="file" class="form-control-file" name="catimg" id="catimg">
                 </div>
             </div>
+            
+           
             <div class="form-group row">
                 <div class="col-sm-10">
                     <button type="submit" class="btn btn-primary float-right">Add Material</button>

@@ -1,0 +1,45 @@
+{{define "company.rented.info.layout"}}
+{{template "companynav" .}}
+{{template "company.rented.info.content" .}}
+{{template "footer" .}}
+{{end}}
+{{define "company.rented.info.content"}}
+
+<div class="align-content-center">
+
+</div>
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 align-content-center">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2>Rented materials</h2>
+    </div>
+    <table class="table table-striped align-content-center">
+        <thead>
+            <tr>
+
+                <!-- <th scope="col">User</th> -->
+                <th scope="col">Material ID</th>
+                <th scope="col">Rent Date</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Username</th>
+                <th scope="col">Transaction Made</th>
+                
+                <!-- <th scope="col"></th> -->
+            </tr>
+        </thead>
+        <tbody>
+            {{ range . }}
+            <tr>
+                <td>  {{ .MaterialID }} </td>
+                <td>  {{ .RentDate }} </td>
+                <td>  {{ .DueDate}} </td>
+                <td>  {{ .Username }} </td>
+                <td>  {{ .TransactionMade }} </td>
+                <!-- <td><a href=""><i class="material-icons">delete</i></a></td> -->
+
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</main>
+{{end}}

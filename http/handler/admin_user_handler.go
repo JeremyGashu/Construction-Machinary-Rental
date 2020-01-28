@@ -48,7 +48,7 @@ func (ach *AdminUserHandler) AdminUsersNew(w http.ResponseWriter, r *http.Reques
 		if errs != nil {
 			panic(errs)
 		}
-		ctg.Account = acc
+		ctg.Account = float64(acc)
 		mf, fh, err := r.FormFile("catimg")
 		if err != nil {
 			panic(err)
@@ -99,9 +99,9 @@ func (ach *AdminUserHandler) AdminUsersUpdate(w http.ResponseWriter, r *http.Req
 		ctg.DeliveryAddress = r.FormValue("daddress")
 		acc, errs := strconv.Atoi(r.FormValue("account"))
 		if errs != nil {
-			panic(errs)
+			fmt.Println(errs)
 		}
-		ctg.Account = acc
+		ctg.Account = float64(acc)
 
 		mf, fh, err := r.FormFile("catimg")
 		if mf != nil {

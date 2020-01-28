@@ -12,7 +12,7 @@
             <div class="col s12 m5 l5">
                     <div class="card">
                         <div class="card-image">
-                            <img src="/assets/img/yellow_hat.jpg">
+                            <img src="/assets/img/{{ .MaterialImagePath }}">
                              
                         </div>
                         <div class="card-content">
@@ -41,6 +41,9 @@
                     </div>
                     <div class="input-field">
                             <input name="companyID" type="hidden" value="{{ .CompanyID }}">
+                        </div>
+                        <div class="input-field">
+                            <input name="logedUser" type="hidden" value="{{ .LogedUser }}">
                         </div>
                     
             </div>

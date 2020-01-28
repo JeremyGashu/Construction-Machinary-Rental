@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -20,6 +21,7 @@ type AuthHandler struct {
 type Info struct {
 	Type  string
 	Value string
+	ID    int
 }
 
 //NewAuthHander -
@@ -60,7 +62,12 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request, ps httprout
 	} else if loggedAs == "provider" {
 		authenticated := ah.company.AuthCompany(username, password)
 		if authenticated {
-			userIn := Info{Type: "provider", Value: username}
+			comp, err := ah.company.CompanyByEmail(username)
+			if err != nil {
+				fmt.Println(err)
+			}
+			userIn := Info{Type: "provider", Value: username, ID: comp.CompanyID}
+
 			token, _ := GenerateToken(userIn) //token generated
 
 			coo := http.Cookie{

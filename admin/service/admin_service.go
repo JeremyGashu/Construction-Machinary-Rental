@@ -1,17 +1,17 @@
 package service
 
 import (
-	"github.com/ermiasgashu/Construction-Machinary-Rental/admin/repository"
+	"github.com/ermiasgashu/Construction-Machinary-Rental/admin"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 )
 
 //AdminService -
 type AdminService struct {
-	repository repository.AdminRepositoryImpl
+	repository admin.AdminRepo
 }
 
 //NewAdminService -
-func NewAdminService(repo repository.AdminRepositoryImpl) *AdminService {
+func NewAdminService(repo admin.AdminRepo) *AdminService {
 	return &AdminService{repository: repo}
 }
 

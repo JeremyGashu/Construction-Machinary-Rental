@@ -88,6 +88,21 @@ func (cri *UserRepositoryImpl) StoreUser(c entity.User) error {
 	return nil
 }
 
+//Pay - Payment for the user
+func (cri *UserRepositoryImpl) Pay(uname string, amount float64) bool {
+	user, err := cri.User(uname)
+	// fmt.Println(user)
+	if err != nil {
+		return false
+	}
+	user.Account = user.Account - amount
+	err = cri.UpdateUser(user)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
 //AuthUser -
 func (cri *UserRepositoryImpl) AuthUser(username string, password string) bool {
 	query := "select username from users where username=$1 and password=$2"
@@ -101,4 +116,23 @@ func (cri *UserRepositoryImpl) AuthUser(username string, password string) bool {
 		}
 	}
 	return true
+}
+
+//GetRentedMaterials -
+func (cri *UserRepositoryImpl) GetRentedMaterials(uname string) ([]entity.RentInformation, error) {
+	query := "select * from materials_rented where borrower=$1"
+	infos := make([]entity.RentInformation, 0)
+	data, err := cri.conn.Query(query, uname)
+	if err != nil {
+		return infos, errors.New("No user is found")
+	}
+	for data.Next() {
+		var info entity.RentInformation
+		data.Scan(&info.MaterialID, &info.CompanyID, &info.RentDate, &info.DueDate, &info.TransactionMade, &info.Username) //all the datas that will be added in the category
+		infos = append(infos, info)
+	}
+	if err := data.Err(); err != nil {
+		return infos, errors.New("Some error is occured")
+	}
+	return infos, nil
 }

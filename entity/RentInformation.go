@@ -7,5 +7,5 @@ type RentInformation struct {
 	Username        string
 	RentDate        string
 	DueDate         string
-	TransactionMade float32
+	TransactionMade float64
 }

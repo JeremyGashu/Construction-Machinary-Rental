@@ -82,7 +82,7 @@ func (ms *MaterialService) GetOwner(id int) (entity.Company, error) {
 
 //RentMaterial -
 func (ms *MaterialService) RentMaterial(rentInfo entity.RentInformation) error {
-	err := ms.RentMaterial(rentInfo)
+	err := ms.repository.RentMaterial(rentInfo)
 	if err != nil {
 		return err
 	}

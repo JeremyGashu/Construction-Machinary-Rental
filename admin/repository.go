@@ -12,6 +12,8 @@ type CompanyRepository interface {
 	AuthCompany(email string, password string) bool
 	UnactivatedCompanies() ([]entity.Company, error)
 	ApproveCompany(id int) error
+	CompanyByEmail(email string) (entity.Company, error)
+	GetRentedMaterials(id int) ([]entity.RentInformation, error)
 	// GetCompanyIDByEmail(email string) (int, error)
 }
 
@@ -31,6 +33,8 @@ type UserRepository interface {
 	UpdateUser(User entity.User) error
 	DeleteUser(uname string) error
 	StoreUser(User entity.User) error
+	Pay(uname string, amount float64) bool
+	GetRentedMaterials(uname string) ([]entity.RentInformation, error)
 	AuthUser(username string, password string) bool
 }
 

@@ -73,6 +73,21 @@ func (cs *UserServiceImpl) DeleteUser(id string) error {
 	return nil
 }
 
+//Pay - Pay for rent
+func (cs *UserServiceImpl) Pay(uname string, amount float64) bool {
+	success := cs.UserRepo.Pay(uname, amount)
+	return success
+}
+
+//GetRentedMaterials -
+func (cs *UserServiceImpl) GetRentedMaterials(uname string) ([]entity.RentInformation, error) {
+	infos, err := cs.UserRepo.GetRentedMaterials(uname)
+	if err != nil {
+		return infos, err
+	}
+	return infos, nil
+}
+
 //AuthUser -
 func (cs *UserServiceImpl) AuthUser(username string, password string) bool {
 	c := cs.UserRepo.AuthUser(username, password)

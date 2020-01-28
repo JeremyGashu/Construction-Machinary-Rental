@@ -47,7 +47,7 @@ func (cri *CompanyRepositoryImpl) Company(id int) (entity.Company, error) {
 
 	Company := entity.Company{}
 
-	err := row.Scan(&Company.CompanyID, &Company.Name, &Company.Email, &Company.Address, &Company.PhoneNo, &Company.Description, &Company.Password, &Company.ImagePath, &Company.Rating, &Company.Account, &Company.Activated)
+	err := row.Scan(&Company.CompanyID, &Company.Name, &Company.Email, &Company.PhoneNo, &Company.Address, &Company.Description, &Company.Rating, &Company.ImagePath, &Company.Password, &Company.Account, &Company.Activated)
 	if err != nil {
 		return Company, err
 	}
@@ -136,6 +136,33 @@ func (cri *CompanyRepositoryImpl) ApproveCompany(id int) error {
 
 }
 
-// func (cri *CompanyRepositoryImpl) GetCompanyIDByEmail(email string) (int, error){
-// 	query := "select"
-// }
+//CompanyByEmail -
+func (cri *CompanyRepositoryImpl) CompanyByEmail(email string) (entity.Company, error) {
+	query := "select * from companies where email=$1"
+	Company := entity.Company{}
+
+	err := cri.conn.QueryRow(query, email).Scan(&Company.CompanyID, &Company.Name, &Company.Email, &Company.Address, &Company.PhoneNo, &Company.Description, &Company.Password, &Company.ImagePath, &Company.Rating, &Company.Account, &Company.Activated)
+	if err != nil {
+		return Company, err
+	}
+	return Company, nil
+}
+
+// GetRentedMaterials -
+func (cri *CompanyRepositoryImpl) GetRentedMaterials(id int) ([]entity.RentInformation, error) {
+	query := "select * from materials_rented where company_id=$1"
+	infos := make([]entity.RentInformation, 0)
+	data, err := cri.conn.Query(query, id)
+	if err != nil {
+		return infos, errors.New("No user is found")
+	}
+	for data.Next() {
+		var info entity.RentInformation
+		data.Scan(&info.MaterialID, &info.CompanyID, &info.RentDate, &info.DueDate, &info.TransactionMade, &info.Username) //all the datas that will be added in the category
+		infos = append(infos, info)
+	}
+	if err := data.Err(); err != nil {
+		return infos, errors.New("Some error is occured")
+	}
+	return infos, nil
+}

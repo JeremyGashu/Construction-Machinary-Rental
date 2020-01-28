@@ -7,9 +7,11 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/ermiasgashu/Construction-Machinary-Rental/admin"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/company"
 	"github.com/ermiasgashu/Construction-Machinary-Rental/entity"
 	"github.com/julienschmidt/httprouter"
@@ -17,13 +19,14 @@ import (
 
 //UserMaterialHandler - User material handler
 type UserMaterialHandler struct {
+	user            admin.UserService
 	materialService company.MaterialService
 	tmpl            *template.Template
 }
 
 //NewUserMaterialHandler -
-func NewUserMaterialHandler(ms company.MaterialService, t *template.Template) *UserMaterialHandler {
-	return &UserMaterialHandler{materialService: ms, tmpl: t}
+func NewUserMaterialHandler(ms company.MaterialService, t *template.Template, usr admin.UserService) *UserMaterialHandler {
+	return &UserMaterialHandler{materialService: ms, tmpl: t, user: usr}
 }
 
 //Materials -
@@ -43,6 +46,7 @@ func (mh *UserMaterialHandler) UserIndex(w http.ResponseWriter, r *http.Request,
 	}
 	var materials []entity.Material
 	err = json.Unmarshal(body, &materials)
+	// fmt.Println(materials)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -66,6 +70,8 @@ type Information struct {
 	OnDiscount        bool
 	OnSale            bool
 	MaterialImagePath string
+
+	LogedUser string
 }
 
 //Material -
@@ -100,7 +106,13 @@ func (mh *UserMaterialHandler) Material(w http.ResponseWriter, r *http.Request, 
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	//ADDED FOR TEST
+
+	// info.LogedUser = user
+	//TEST
 	mh.tmpl.ExecuteTemplate(w, "user.single.material.layout", info)
+
 }
 
 //UserRentMaterial -
@@ -125,13 +137,17 @@ func (mh *UserMaterialHandler) UserRentMaterial(w http.ResponseWriter, r *http.R
 		if err != nil {
 			fmt.Println(err)
 		}
+		user, err := GetLogedUserFromJWT(r)
+		if err != nil {
+			fmt.Println(err)
+		}
 		var material entity.Material
 
 		err = json.Unmarshal(body, &material)
 		own, _ := mh.materialService.GetOwner(material.Owner) //getting owner from the owner id
-		fmt.Println(own.CompanyID)
-		info := Information{CompanyName: own.Name, CompanyAddress: own.Address, CompanyDescription: own.Description, CompanyEmail: own.Email, CompanyImagePath: own.ImagePath, CompanyPhone: own.PhoneNo, ComppanyRating: own.Rating, MaterialID: material.ID, MaterialImagePath: material.ImagePath, MaterialName: material.Name, OnDiscount: material.OnDiscount, OnSale: material.OnSale, PricePerDay: material.PricePerDay, CompanyID: own.CompanyID}
-
+		// fmt.Println(own.CompanyID)
+		info := Information{LogedUser: user, CompanyName: own.Name, CompanyAddress: own.Address, CompanyDescription: own.Description, CompanyEmail: own.Email, CompanyImagePath: own.ImagePath, CompanyPhone: own.PhoneNo, ComppanyRating: own.Rating, MaterialID: material.ID, MaterialImagePath: material.ImagePath, MaterialName: material.Name, OnDiscount: material.OnDiscount, OnSale: material.OnSale, PricePerDay: material.PricePerDay, CompanyID: own.CompanyID}
+		// fmt.Println(info)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -145,37 +161,75 @@ func (mh *UserMaterialHandler) UserRentMaterial(w http.ResponseWriter, r *http.R
 		year := rentdate.Year()
 
 		info.RentDate = fmt.Sprintf("%d-%d-%d", year, month, day)
+		info.Username = r.FormValue("logedUser")
 		info.CompanyID, _ = strconv.Atoi(r.FormValue("companyID"))
 		info.DueDate = r.FormValue("returnDate")
+		parsedDate := strings.Split(r.FormValue("returnDate"), "-")
 		info.MaterialID, _ = strconv.Atoi(r.FormValue("materialID"))
-
-		coo, err := r.Cookie("auth-information")
+		dday, err := strconv.Atoi(parsedDate[2])
 		if err != nil {
-			http.Redirect(w, r, "/user", http.StatusSeeOther)
-
-		} else {
-			if coo != nil {
-				token, err := jwt.Parse(coo.Value, func(token *jwt.Token) (interface{}, error) {
-					if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-						return nil, fmt.Errorf("There was an error")
-					}
-					return []byte("secret-key"), nil
-				})
-				if err != nil {
-					fmt.Println(err)
-				}
-				user := token.Claims.(jwt.MapClaims)["auth-information"].(map[string]interface{})["Value"].(string)
-				info.Username = user
-				// // fmt.Println("Valid Token Thanks")
-				// fmt.Println(token.Claims.(jwt.MapClaims)["auth-information"].(map[string]interface{})["Value"]) // GETTING THE CLAIM AFTER LONG TRY
-			}
+			fmt.Println(err)
 		}
-		info.TransactionMade = 1200
+		dmonth, err := strconv.Atoi(parsedDate[1])
+		if err != nil {
+			fmt.Println(err)
+		}
+		dyear, err := strconv.Atoi(parsedDate[0])
+		if err != nil {
+			fmt.Println(err)
+		}
+		amount := float64((dyear-year)*365 + (dmonth-month)*30 + (dday - day))
+
+		// fmt.Println("Loogged:" + r.FormValue("logedUser"))
+
+		if amount > 0 {
+
+			b := mh.user.Pay(info.Username, amount)
+
+			if b {
+				info.TransactionMade = float64(amount)
+			}
+		} else {
+			info.TransactionMade = float64(0)
+
+		}
+
 		err = mh.materialService.RentMaterial(info)
+
 		// fmt.Println(info)
 		if err != nil {
 			fmt.Println(err)
 		}
 		http.Redirect(w, r, "/user", http.StatusSeeOther)
 	}
+}
+
+//GetRentedMaterials -
+func (mh *UserMaterialHandler) GetRentedMaterials(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	user, err := GetLogedUserFromJWT(r)
+	if err != nil {
+		fmt.Println(err)
+	}
+	usr, err := mh.user.GetRentedMaterials(user)
+	if err != nil {
+		fmt.Println(err)
+	}
+	mh.tmpl.ExecuteTemplate(w, "user.rented.info.layout", usr)
+}
+
+//GetLogedUserFromJWT - get user
+func GetLogedUserFromJWT(r *http.Request) (string, error) {
+	coo, err := r.Cookie("auth-information")
+
+	token, err := jwt.Parse(coo.Value, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("There was an error")
+		}
+		return []byte("secret-key"), nil
+	})
+	if err != nil {
+		return "", err
+	}
+	user := token.Claims.(jwt.MapClaims)["auth-information"].(map[string]interface{})["Value"].(string)
+	return user, nil
 }

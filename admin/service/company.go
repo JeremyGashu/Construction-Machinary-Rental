@@ -96,3 +96,21 @@ func (cs *CompanyServiceImpl) ApproveCompany(id int) error {
 	}
 	return nil
 }
+
+//CompanyByEmail -
+func (cs *CompanyServiceImpl) CompanyByEmail(email string) (entity.Company, error) {
+	comp, err := cs.CompanyRepo.CompanyByEmail(email)
+	if err != nil {
+		return comp, err
+	}
+	return comp, nil
+}
+
+//GetRentedMaterials -
+func (cs *CompanyServiceImpl) GetRentedMaterials(id int) ([]entity.RentInformation, error) {
+	infos, err := cs.CompanyRepo.GetRentedMaterials(id)
+	if err != nil {
+		return infos, err
+	}
+	return infos, nil
+}

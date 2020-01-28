@@ -109,10 +109,10 @@ func (mr *MaterialRepository) GetOwner(id int) (entity.Company, error) {
 }
 
 func (mr *MaterialRepository) RentMaterial(rentInfo entity.RentInformation) error {
-	query := "insert into materials_rented(material_id,company_id,borrower,rent_date,due_date,transactionmade) values($1,$2,$3,$4,$5,$6)"
+	query := "insert into materials_rented values($1,$2,$3,$4,$5,$6)"
 	// fmt.Println(rentInfo)
 
-	_, err := mr.conn.Exec(query, rentInfo.MaterialID, rentInfo.CompanyID, rentInfo.Username, rentInfo.RentDate, rentInfo.DueDate, rentInfo.TransactionMade)
+	_, err := mr.conn.Exec(query, rentInfo.MaterialID, rentInfo.CompanyID, rentInfo.RentDate, rentInfo.DueDate, rentInfo.TransactionMade, rentInfo.Username)
 	if err != nil {
 		return err
 	}
