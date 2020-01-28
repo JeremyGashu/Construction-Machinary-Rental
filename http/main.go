@@ -102,7 +102,7 @@ func main() {
 
 	hand := api.NewCompanyMaterialHandler(ser)
 	handlol := handlers.NewCompanyMaterialHandler(templ, ser, CompanyServ)
-	userMaterialHandler := handlers.NewUserMaterialHandler(ser, templ, UserServ)
+	userMaterialHandler := handlers.NewUserMaterialHandler(ser, templ, UserServ, CompanyServ)
 	userProfileHandler := handlers.NewUserProfileHandler(ser, templ, UserServ)
 
 	// materialHandle := handlers.NewCompanyMaterialHandler(templ, ser)

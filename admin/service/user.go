@@ -74,8 +74,8 @@ func (cs *UserServiceImpl) DeleteUser(id string) error {
 }
 
 //Pay - Pay for rent
-func (cs *UserServiceImpl) Pay(uname string, amount float64) bool {
-	success := cs.UserRepo.Pay(uname, amount)
+func (cs *UserServiceImpl) Pay(uname string, amount float64, cid int) bool {
+	success := cs.UserRepo.Pay(uname, amount, cid)
 	return success
 }
 

@@ -33,7 +33,7 @@ type UserService interface {
 	UpdateUser(User entity.User) error
 	DeleteUser(uname string) error
 	StoreUser(User entity.User) error
-	Pay(uname string, amount float64) bool
+	Pay(uname string, amount float64, cid int) bool
 	GetRentedMaterials(uname string) ([]entity.RentInformation, error)
 	AuthUser(username string, password string) bool
 }

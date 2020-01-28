@@ -30,7 +30,7 @@ func (cri *CompanyRepositoryImpl) Companies() ([]entity.Company, error) {
 
 	for rows.Next() {
 		Company := entity.Company{}
-		err = rows.Scan(&Company.CompanyID, &Company.Name, &Company.Email, &Company.Address, &Company.PhoneNo, &Company.Description, &Company.Password, &Company.ImagePath, &Company.Rating, &Company.Account, &Company.Activated)
+		err = rows.Scan(&Company.CompanyID, &Company.Name, &Company.Email, &Company.PhoneNo, &Company.Address, &Company.Description, &Company.Rating, &Company.ImagePath, &Company.Password, &Company.Account, &Company.Activated)
 		if err != nil {
 			return nil, err
 		}
@@ -58,7 +58,7 @@ func (cri *CompanyRepositoryImpl) Company(id int) (entity.Company, error) {
 // UpdateCompany updates a given object with a new data
 func (cri *CompanyRepositoryImpl) UpdateCompany(c entity.Company) error {
 
-	_, err := cri.conn.Exec("UPDATE companies SET name=$1,description=$2, imagepath=$3,email=$4,phone=$5,address=$6,rating=$7,password=$8,activated=$9 WHERE id=$10", c.Name, c.Description, c.ImagePath, c.Email, c.PhoneNo, c.Address, c.Rating, c.Password, c.Activated, c.CompanyID)
+	_, err := cri.conn.Exec("UPDATE companies SET name=$1,description=$2, imagepath=$3,email=$4,phone=$5,address=$6,rating=$7,password=$8,activated=$9,account=$10 WHERE id=$11", c.Name, c.Description, c.ImagePath, c.Email, c.PhoneNo, c.Address, c.Rating, c.Password, c.Activated, c.Account, c.CompanyID)
 	if err != nil {
 		return errors.New("Update has failed")
 	}
@@ -115,7 +115,7 @@ func (cri *CompanyRepositoryImpl) UnactivatedCompanies() ([]entity.Company, erro
 
 	for rows.Next() {
 		Company := entity.Company{}
-		err = rows.Scan(&Company.CompanyID, &Company.Name, &Company.Email, &Company.Address, &Company.PhoneNo, &Company.Description, &Company.Password, &Company.ImagePath, &Company.Rating, &Company.Account, &Company.Activated)
+		err = rows.Scan(&Company.CompanyID, &Company.Name, &Company.Email, &Company.PhoneNo, &Company.Address, &Company.Description, &Company.Rating, &Company.ImagePath, &Company.Password, &Company.Account, &Company.Activated)
 		if err != nil {
 			return nil, err
 		}

@@ -34,6 +34,9 @@
                 <div class="input-field">
                     <input name="returnDate" id="returnDate" type="date" class="validate" required>
                 </div>
+                <div class="input-field">
+                    <input name="priceperday" type="hidden" value="{{ .PricePerDay }}">
+                </div>
 
                 <div class="input-field">
                         <input name="materialID" type="hidden" value="{{ .MaterialID }}">

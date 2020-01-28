@@ -58,7 +58,7 @@ func (cri *AdminRepositoryImpl) Admin(id string) (entity.Admin, error) {
 // UpdateAdmin updates a given object with a new data
 func (cri *AdminRepositoryImpl) UpdateAdmin(c entity.Admin) error {
 
-	_, err := cri.conn.Exec("UPDATE admin SET firstname=$1,email=$2,password=$3,imagepath=$4 WHERE username=$5", c.FirstName, c.Email, c.Password, c.ImagePath, c.Username)
+	_, err := cri.conn.Exec("UPDATE admin SET firstname=$1,email=$2,password=$3,imagepath=$4,lastname=$5 WHERE username=$5", c.FirstName, c.Email, c.Password, c.ImagePath, c.LastName, c.Username)
 	if err != nil {
 		return errors.New("Update has failed")
 	}

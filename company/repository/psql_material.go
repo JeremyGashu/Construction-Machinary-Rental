@@ -99,9 +99,9 @@ func (mr *MaterialRepository) MaterialByCompanyOwner(id int) ([]entity.Material,
 
 //GetOwner -
 func (mr *MaterialRepository) GetOwner(id int) (entity.Company, error) {
-	query := "select id,name,email,address,phone,description,rating,imagepath from companies where id = $1"
+	query := "select id,name,email,address,phone,description,rating,imagepath,account from companies where id = $1"
 	var Company entity.Company
-	err := mr.conn.QueryRow(query, id).Scan(&Company.CompanyID, &Company.Name, &Company.Email, &Company.Address, &Company.PhoneNo, &Company.Description, &Company.Rating, &Company.ImagePath)
+	err := mr.conn.QueryRow(query, id).Scan(&Company.CompanyID, &Company.Name, &Company.Email, &Company.Address, &Company.PhoneNo, &Company.Description, &Company.Rating, &Company.ImagePath, &Company.Account)
 	if err != nil {
 		return Company, err
 	}

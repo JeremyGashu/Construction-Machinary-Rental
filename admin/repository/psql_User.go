@@ -89,7 +89,8 @@ func (cri *UserRepositoryImpl) StoreUser(c entity.User) error {
 }
 
 //Pay - Payment for the user
-func (cri *UserRepositoryImpl) Pay(uname string, amount float64) bool {
+func (cri *UserRepositoryImpl) Pay(uname string, amount float64, cid int) bool {
+	
 	user, err := cri.User(uname)
 	// fmt.Println(user)
 	if err != nil {

@@ -153,6 +153,7 @@ func (ach *AdminCompanyHandler) Unactivated(w http.ResponseWriter, r *http.Reque
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println(Companys)
 	ach.tmpl.ExecuteTemplate(w, "admin.company.unactivated.layout", Companys)
 }
 

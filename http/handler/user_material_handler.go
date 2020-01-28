@@ -19,14 +19,15 @@ import (
 
 //UserMaterialHandler - User material handler
 type UserMaterialHandler struct {
+	comp            admin.CompanyService
 	user            admin.UserService
 	materialService company.MaterialService
 	tmpl            *template.Template
 }
 
 //NewUserMaterialHandler -
-func NewUserMaterialHandler(ms company.MaterialService, t *template.Template, usr admin.UserService) *UserMaterialHandler {
-	return &UserMaterialHandler{materialService: ms, tmpl: t, user: usr}
+func NewUserMaterialHandler(ms company.MaterialService, t *template.Template, usr admin.UserService, c admin.CompanyService) *UserMaterialHandler {
+	return &UserMaterialHandler{materialService: ms, tmpl: t, user: usr, comp: c}
 }
 
 //Materials -
@@ -145,6 +146,7 @@ func (mh *UserMaterialHandler) UserRentMaterial(w http.ResponseWriter, r *http.R
 
 		err = json.Unmarshal(body, &material)
 		own, _ := mh.materialService.GetOwner(material.Owner) //getting owner from the owner id
+
 		// fmt.Println(own.CompanyID)
 		info := Information{LogedUser: user, CompanyName: own.Name, CompanyAddress: own.Address, CompanyDescription: own.Description, CompanyEmail: own.Email, CompanyImagePath: own.ImagePath, CompanyPhone: own.PhoneNo, ComppanyRating: own.Rating, MaterialID: material.ID, MaterialImagePath: material.ImagePath, MaterialName: material.Name, OnDiscount: material.OnDiscount, OnSale: material.OnSale, PricePerDay: material.PricePerDay, CompanyID: own.CompanyID}
 		// fmt.Println(info)
@@ -166,7 +168,14 @@ func (mh *UserMaterialHandler) UserRentMaterial(w http.ResponseWriter, r *http.R
 		info.DueDate = r.FormValue("returnDate")
 		parsedDate := strings.Split(r.FormValue("returnDate"), "-")
 		info.MaterialID, _ = strconv.Atoi(r.FormValue("materialID"))
+		price, _ := strconv.ParseFloat(r.FormValue("priceperday"), 10)
 		dday, err := strconv.Atoi(parsedDate[2])
+		comp, err := mh.materialService.GetOwner(info.CompanyID)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -178,13 +187,16 @@ func (mh *UserMaterialHandler) UserRentMaterial(w http.ResponseWriter, r *http.R
 		if err != nil {
 			fmt.Println(err)
 		}
-		amount := float64((dyear-year)*365 + (dmonth-month)*30 + (dday - day))
+		amount := float32((dyear-year)*365+(dmonth-month)*30+(dday-day)) * float32(price)
+
+		comp.Account = comp.Account + amount
+		// fmt.Println(comp)
 
 		// fmt.Println("Loogged:" + r.FormValue("logedUser"))
 
 		if amount > 0 {
 
-			b := mh.user.Pay(info.Username, amount)
+			b := mh.user.Pay(info.Username, float64(amount), comp.CompanyID)
 
 			if b {
 				info.TransactionMade = float64(amount)
@@ -192,6 +204,10 @@ func (mh *UserMaterialHandler) UserRentMaterial(w http.ResponseWriter, r *http.R
 		} else {
 			info.TransactionMade = float64(0)
 
+		}
+		err = mh.comp.UpdateCompany(comp)
+		if err != nil {
+			fmt.Println(err)
 		}
 
 		err = mh.materialService.RentMaterial(info)
